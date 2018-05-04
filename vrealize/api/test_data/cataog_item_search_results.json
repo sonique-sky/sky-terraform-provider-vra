@@ -1,0 +1,81 @@
+{
+  "links": [],
+  "content": [
+    {
+      "@type": "ConsumerEntitledCatalogItem",
+      "catalogItem": {
+        "callbacks": null,
+        "catalogItemTypeRef": {
+          "id": "com.vmware.csp.component.cafe.composition.blueprint",
+          "label": "Composite Blueprint"
+        },
+        "dateCreated": "2017-08-01T22:26:02.764Z",
+        "description": "A corporate style VM that you have full administrative access to and that you must administer yourself.",
+        "forms": {
+          "itemDetails": {
+            "type": "external",
+            "formId": "composition.catalog.item.details"
+          },
+          "catalogRequestInfoHidden": true,
+          "requestFormScale": "BIG",
+          "requestSubmission": {
+            "type": "extension",
+            "extensionId": "com.vmware.vcac.core.design.blueprints.requestForm",
+            "extensionPointId": null
+          },
+          "requestDetails": {
+            "type": "extension",
+            "extensionId": "com.vmware.vcac.core.design.blueprints.requestDetailsForm",
+            "extensionPointId": null
+          }
+        },
+        "iconId": "264cc21e-95c2-4ec1-afe6-5e7c77548048",
+        "id": "264cc21e-95c2-4ec1-afe6-5e7c77548048",
+        "isNoteworthy": false,
+        "lastUpdatedDate": "2018-01-11T16:00:20.669Z",
+        "name": "CentOS Build",
+        "organization": {
+          "tenantRef": "vsphere.local",
+          "tenantLabel": "vsphere.local",
+          "subtenantRef": null,
+          "subtenantLabel": null
+        },
+        "outputResourceTypeRef": {
+          "id": "composition.resource.type.deployment",
+          "label": "Deployment"
+        },
+        "providerBinding": {
+          "bindingId": "vsphere.local!::!CentOS",
+          "providerRef": {
+            "id": "5d681f6d-65f3-462f-bb59-53dd8aaf05d0",
+            "label": "Blueprint Service"
+          }
+        },
+        "serviceRef": {
+          "id": "c95b10cb-608c-4f88-8861-7f192f34ab34",
+          "label": "Group"
+        },
+        "status": "PUBLISHED",
+        "statusName": "Published",
+        "quota": 0,
+        "version": 9,
+        "requestable": true
+      },
+      "entitledOrganizations": [
+        {
+          "tenantRef": "vsphere.local",
+          "tenantLabel": "vsphere.local",
+          "subtenantRef": "e20a48d9-9371-428e-8a03-7427041dfe0f",
+          "subtenantLabel": "Group"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "size": 20,
+    "totalElements": 1,
+    "totalPages": 1,
+    "number": 1,
+    "offset": 0
+  }
+}

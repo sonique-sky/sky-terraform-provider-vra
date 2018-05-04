@@ -1,0 +1,9 @@
+{
+  "type": "com.vmware.vcac.catalog.domain.request.CatalogResourceRequest",
+  "resourceId": "b313acd6-0738-439c-b601-e3ebf9ebb49b",
+  "actionId": "3da0ca14-e7e2-4d7b-89cb-c6db57440d72",
+  "description": null,
+  "data": {
+    "ForceDestroy": false
+  }
+}
