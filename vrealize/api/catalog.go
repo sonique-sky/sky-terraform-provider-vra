@@ -24,16 +24,14 @@ type CatalogItemWrapper struct {
 }
 
 type entitledCatalogItemViews struct {
-	Links    interface{}          `json:"links"`
-	Content  []CatalogItemWrapper `json:"content"`
-	Metadata Metadata             `json:"metadata"`
+	Links   interface{}          `json:"links"`
+	Content []CatalogItemWrapper `json:"content"`
+	Metadata struct {
+		TotalElements int `json:"totalElements"`
+	} `json:"metadata"`
 }
 
-type Metadata struct {
-	TotalElements int `json:"totalElements"`
-}
-
-func (c *Client) GetCatalogItem(uuid string) (*CatalogItemTemplate, error) {
+func (c *RestClient) getCatalogItem(uuid string) (*CatalogItemTemplate, error) {
 	template := new(CatalogItemTemplate)
 	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests/template", uuid)
 
@@ -45,21 +43,21 @@ func (c *Client) GetCatalogItem(uuid string) (*CatalogItemTemplate, error) {
 	return template, nil
 }
 
-func (c *Client) ReadCatalogNameByID(catalogID string) (interface{}, error) {
-	catalog := new(CatalogItemWrapper)
-	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s", catalogID)
+func (c *RestClient) ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error) {
+	catalog := new(CatalogItemTemplate)
+	path := fmt.Sprintf(("/catalog-service/api/consumer/entitledCatalogItems")+"/%s/requests/template", catalogId)
 
 	err := c.get(path, catalog, noCheck)
 	if err != nil {
 		return nil, err
 	}
 
-	return catalog.Item.Name, nil
+	return catalog, nil
 }
 
-func (c *Client) ReadCatalogIDByName(catalogName string) (interface{}, error) {
+func (c *RestClient) ReadCatalogByName(catalogName string) (*CatalogItemTemplate, error) {
 	template := new(entitledCatalogItemViews)
-	path := fmt.Sprintf("catalog-service/api/consumer/entitledCatalogItemViews?$filter=name+eq+'%s'", catalogName)
+	path := fmt.Sprintf(fmtCatalogItemsSearch, catalogName)
 
 	err := c.get(path, template, noCheck)
 	if err != nil {
@@ -72,5 +70,5 @@ func (c *Client) ReadCatalogIDByName(catalogName string) (interface{}, error) {
 
 	catalog := template.Content[0]
 
-	return catalog.Item.ID, nil
+	return c.getCatalogItem(catalog.Item.ID)
 }

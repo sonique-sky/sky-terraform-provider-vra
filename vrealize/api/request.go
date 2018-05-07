@@ -2,8 +2,8 @@ package api
 
 import "fmt"
 
-func (c *Client) GetRequestStatus(ResourceID string) (*RequestStatusView, error) {
-	path := fmt.Sprintf(fmtRequest, ResourceID)
+func (c *RestClient) GetRequestStatus(requestId string) (*RequestStatusView, error) {
+	path := fmt.Sprintf(fmtRequest, requestId)
 	requestStatusViewTemplate := new(RequestStatusView)
 
 	err := c.get(path, requestStatusViewTemplate, noCheck)
@@ -11,8 +11,8 @@ func (c *Client) GetRequestStatus(ResourceID string) (*RequestStatusView, error)
 	return requestStatusViewTemplate, err
 }
 
-func (c *Client) GetResourceViews(ResourceID string) (*ResourceViewsTemplate, error) {
-	path := fmt.Sprintf(fmtRequestResourceViews, ResourceID)
+func (c *RestClient) GetResourceViews(requestId string) (*ResourceViewsTemplate, error) {
+	path := fmt.Sprintf(fmtRequestResourceViews, requestId)
 	resourceViewsTemplate := new(ResourceViewsTemplate)
 
 	err := c.get(path, resourceViewsTemplate, noCheck)

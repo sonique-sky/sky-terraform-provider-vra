@@ -6,9 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"errors"
 	"io/ioutil"
+	"encoding/json"
 )
 
-var client Client
+var client RestClient
 
 func init() {
 	client = NewClient(
@@ -34,21 +35,10 @@ func TestNewAPIClient(t *testing.T) {
 		true,
 	)
 
-	if client.Username != username {
-		t.Errorf("Expected username %v, got %v ", username, client.Username)
-	}
-
-	if client.Password != password {
-		t.Errorf("Expected password %v, got %v ", password, client.Password)
-	}
-
-	if client.Tenant != tenant {
-		t.Errorf("Expected tenant %v, got %v ", tenant, client.Tenant)
-	}
-
-	if client.BaseURL != baseURL {
-		t.Errorf("Expected BaseUrl %v, got %v ", baseURL, client.BaseURL)
-	}
+	assert.Equal(t, username, client.Username)
+	assert.Equal(t, password, client.Password)
+	assert.Equal(t, tenant, client.Tenant)
+	assert.Equal(t, baseURL, client.BaseURL)
 }
 
 func TestAPIClient_Authenticate_OK(t *testing.T) {
@@ -56,16 +46,16 @@ func TestAPIClient_Authenticate_OK(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	httpmock.RegisterResponder("POST", "http://localhost/identity/api/tokens",
-		httpmock.NewStringResponder(200, testData("token_response.json")))
+		httpmock.NewStringResponder(200, testData("token_response")))
+
+	data, _ := ioutil.ReadFile("test_data/token_response.json")
+	response := new(AuthResponse)
+	json.Unmarshal(data, response)
 
 	err := client.Authenticate()
 
 	assert.Nil(t, err)
-
-	if len(client.BearerToken) == 0 {
-		t.Error("Fail to set BearerToken.")
-	}
-
+	assert.Equal(t, response.ID, client.BearerToken)
 }
 
 func TestAPIClient_Authenticate_Failed(t *testing.T) {
@@ -73,18 +63,15 @@ func TestAPIClient_Authenticate_Failed(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	httpmock.RegisterResponder("POST", "http://localhost/identity/api/tokens",
-		httpmock.NewErrorResponder(errors.New(testData("auth_failure.json"))))
+		httpmock.NewErrorResponder(errors.New(testData("auth_failure"))))
 
 	err := client.Authenticate()
 
-	if err == nil {
-		t.Errorf("Authentication should fail")
-	}
-
+	assert.NotNil(t, err)
 }
 
 func testData(filename string) (string) {
-	bytes, err := ioutil.ReadFile("test_data/" + filename)
+	bytes, err := ioutil.ReadFile("test_data/" + filename +".json")
 	if err != nil {
 		panic(err)
 	}

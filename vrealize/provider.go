@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/api"
+	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/machine"
 )
 
 func Provider() terraform.ResourceProvider {
@@ -67,6 +68,6 @@ func providerConfig(r *schema.ResourceData) (interface{}, error) {
 
 func providerResources() map[string]*schema.Resource {
 	return map[string]*schema.Resource{
-		"vra7_resource": ResourceMachine(),
+		"vra7_resource": machine.Resource(),
 	}
 }

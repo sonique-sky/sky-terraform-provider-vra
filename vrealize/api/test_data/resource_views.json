@@ -3,63 +3,16 @@
   "content": [
     {
       "@type": "CatalogResourceView",
-      "resourceId": "b313acd6-0738-439c-b601-e3ebf9ebb49b",
-      "iconId": "502efc1b-d5ce-4ef9-99ee-d4e2a741747c",
-      "name": "CentOS 6.3 - IPAM EXT-95563173",
-      "description": "",
-      "status": null,
-      "catalogItemId": "502efc1b-d5ce-4ef9-99ee-d4e2a741747c",
-      "catalogItemLabel": "CentOS 6.3 - IPAM EXT",
-      "requestId": "dcb12203-93f4-4873-a7d5-1757f3696141",
-      "requestState": "SUCCESSFUL",
-      "resourceType": "composition.resource.type.deployment",
-      "owners": [
-        "Jason Cloud Admin"
-      ],
-      "businessGroupId": "53619006-56bb-4788-9723-9eab79752cc1",
-      "tenantId": "vsphere.local",
-      "dateCreated": "2017-07-17T13:26:42.102Z",
-      "lastUpdated": "2017-07-17T13:33:25.521Z",
-      "lease": {
-        "start": "2017-07-17T13:26:42.079Z",
-        "end": null
-      },
-      "costs": null,
-      "costToDate": null,
-      "totalCost": null,
-      "parentResourceId": null,
-      "hasChildren": true,
-      "data": {},
       "links": [
         {
           "@type": "link",
           "rel": "GET: Catalog Item",
-          "href": "http://localhost/catalog-service/api/consumer/entitledCatalogItemViews/502efc1b-d5ce-4ef9-99ee-d4e2a741747c"
+          "href": "http://localhost/catalog-service/api/consumer/entitledCatalogItemViews/264cc21e-95c2-4ec1-afe6-5e7c77548048"
         },
         {
           "@type": "link",
           "rel": "GET: Request",
-          "href": "http://localhost/catalog-service/api/consumer/requests/dcb12203-93f4-4873-a7d5-1757f3696141"
-        },
-        {
-          "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.changelease.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/561be422-ece6-4316-8acb-a8f3dbb8ed0c/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.changelease.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/561be422-ece6-4316-8acb-a8f3dbb8ed0c/requests"
-        },
-        {
-          "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.changeowner.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/59249166-e427-4082-a3dc-eb7223bb2de1/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.changeowner.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/59249166-e427-4082-a3dc-eb7223bb2de1/requests"
+          "href": "http://localhost/catalog-service/api/consumer/requests/76050272-550b-4783-8673-83712cb37375"
         },
         {
           "@type": "link",
@@ -73,63 +26,188 @@
         },
         {
           "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.archive.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/9725d56e-461a-471a-be00-b1856681c6d0/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.archive.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/9725d56e-461a-471a-be00-b1856681c6d0/requests"
-        },
-        {
-          "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.scalein.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/85e090f9-9529-4101-9691-6bab1b0a1f77/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.scalein.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/85e090f9-9529-4101-9691-6bab1b0a1f77/requests"
-        },
-        {
-          "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.scaleout.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/ab5795f5-32ad-4f6c-8598-1d3a7d190caa/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.scaleout.name}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/b313acd6-0738-439c-b601-e3ebf9ebb49b/actions/ab5795f5-32ad-4f6c-8598-1d3a7d190caa/requests"
-        },
-        {
-          "@type": "link",
           "rel": "GET: Child Resources",
           "href": "http://localhost/catalog-service/api/consumer/resourceViews?managedOnly=false&withExtendedData=true&withOperations=true&%24filter=parentResource%20eq%20%27b313acd6-0738-439c-b601-e3ebf9ebb49b%27"
         }
-      ]
+      ],
+      "resourceId": "b313acd6-0738-439c-b601-e3ebf9ebb49b",
+      "iconId": "264cc21e-95c2-4ec1-afe6-5e7c77548048",
+      "name": "CentOS",
+      "description": "linux box",
+      "status": null,
+      "catalogItemId": "264cc21e-95c2-4ec1-afe6-5e7c77548048",
+      "catalogItemLabel": "CentOS",
+      "requestId": "76050272-550b-4783-8673-83712cb37375",
+      "resourceType": "composition.resource.type.deployment",
+      "owners": [
+        "me"
+      ],
+      "businessGroupId": "e20a48d9-9371-428e-8a03-7427041dfe0f",
+      "tenantId": "vsphere.local",
+      "dateCreated": "2018-05-04T08:31:16.116Z",
+      "lastUpdated": "2018-05-04T08:37:23.335Z",
+      "lease": {
+        "start": "2018-05-04T08:31:15.825Z"
+      },
+      "costs": null,
+      "costToDate": null,
+      "totalCost": null,
+      "parentResourceId": null,
+      "hasChildren": true,
+      "data": {}
     },
     {
       "@type": "CatalogResourceView",
-      "resourceId": "51bf8bd7-8553-4b0d-b580-41ab0cfaf9a5",
+      "links": [
+        {
+          "@type": "link",
+          "rel": "GET: Request",
+          "href": "http://localhost/catalog-service/api/consumer/requests/76050272-550b-4783-8673-83712cb37375"
+        },
+        {
+          "@type": "link",
+          "rel": "GET: Parent Resource",
+          "href": "http://localhost/catalog-service/api/consumer/resourceViews/b313acd6-0738-439c-b601-e3ebf9ebb49b"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: Change Availability Zone",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/edc91e96-df9f-44dd-9caa-ed713dc8cdd3/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: Change Availability Zone",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/edc91e96-df9f-44dd-9caa-ed713dc8cdd3/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@csp.places.iaas.item.window.ConnectViaVmrc.label}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/fcbf9796-cabe-4d92-ad5c-ebb7843787ab/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@csp.places.iaas.item.window.ConnectViaVmrc.label}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/fcbf9796-cabe-4d92-ad5c-ebb7843787ab/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@csp.places.iaas.item.window.ConnectViaSsh.label}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/0c369513-715c-42af-a9c7-260031244dae/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@csp.places.iaas.item.window.ConnectViaSsh.label}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/0c369513-715c-42af-a9c7-260031244dae/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@csp.places.iaas.item.nowindow.ConnectViaNativeVmrc.label}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/bcf88028-10e9-44bc-a02c-9f35ff4a45ae/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@csp.places.iaas.item.nowindow.ConnectViaNativeVmrc.label}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/bcf88028-10e9-44bc-a02c-9f35ff4a45ae/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.virtual.CreateSnapshot}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/867706dc-ae31-4fb3-93e9-a9b17e4d9770/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.virtual.CreateSnapshot}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/867706dc-ae31-4fb3-93e9-a9b17e4d9770/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.virtual.Destroy}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/5883bbea-cd9a-4bf3-a2b3-f6cc20135435/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.virtual.Destroy}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/5883bbea-cd9a-4bf3-a2b3-f6cc20135435/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Reset}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/0f5285d3-58bc-4ebb-9c9e-9ba809783317/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Reset}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/0f5285d3-58bc-4ebb-9c9e-9ba809783317/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/aad26bfa-e656-4aa6-a5e3-011183681bcf/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/aad26bfa-e656-4aa6-a5e3-011183681bcf/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Reboot}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/9f870747-3ee4-49f3-8881-07fb8e54d428/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Reboot}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/9f870747-3ee4-49f3-8881-07fb8e54d428/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Reconfigure}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/4ae8147e-ce45-4b25-a8a7-3c0f02281363/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Reconfigure}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/4ae8147e-ce45-4b25-a8a7-3c0f02281363/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: Register a host for downtime",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/565f1f3f-d1ab-409d-b869-8428b63de9e0/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: Register a host for downtime",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/565f1f3f-d1ab-409d-b869-8428b63de9e0/requests"
+        },
+        {
+          "@type": "link",
+          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Shutdown}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/d7b3eb8b-ce09-4696-853f-9c30934a06cf/requests/template"
+        },
+        {
+          "@type": "link",
+          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Shutdown}",
+          "href": "http://localhost/catalog-service/api/consumer/resources/dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c/actions/d7b3eb8b-ce09-4696-853f-9c30934a06cf/requests"
+        }
+      ],
+      "resourceId": "dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c",
       "iconId": "Infrastructure.CatalogItem.Machine.Virtual.vSphere",
-      "name": "Content0061",
-      "description": "Basic IaaS CentOS Machine",
-      "status": "Missing",
+      "name": "machine.domain.com",
+      "description": "linux box",
+      "status": "On",
       "catalogItemId": null,
       "catalogItemLabel": null,
-      "requestId": "dcb12203-93f4-4873-a7d5-1757f3696141",
-      "requestState": "SUCCESSFUL",
+      "requestId": "76050272-550b-4783-8673-83712cb37375",
       "resourceType": "Infrastructure.Virtual",
       "owners": [
-        "Jason Cloud Admin"
+        "me"
       ],
-      "businessGroupId": "53619006-56bb-4788-9723-9eab79752cc1",
+      "businessGroupId": "e20a48d9-9371-428e-8a03-7427041dfe0f",
       "tenantId": "vsphere.local",
-      "dateCreated": "2017-07-17T13:33:16.686Z",
-      "lastUpdated": "2017-07-17T13:33:25.521Z",
+      "dateCreated": "2018-05-04T08:37:15.216Z",
+      "lastUpdated": "2018-05-04T08:37:23.334Z",
       "lease": {
-        "start": "2017-07-17T13:26:42.079Z",
-        "end": null
+        "start": "2018-05-04T08:31:15.825Z"
       },
       "costs": null,
       "costToDate": null,
@@ -137,7 +215,13 @@
       "parentResourceId": "b313acd6-0738-439c-b601-e3ebf9ebb49b",
       "hasChildren": false,
       "data": {
-        "Component": "CentOS_6.3",
+        "ChangeLease": true,
+        "ChangeOwner": true,
+        "Component": "Machine",
+        "ConnectViaNativeVmrc": true,
+        "ConnectViaSsh": true,
+        "ConnectViaVmrc": true,
+        "CreateSnapshot": true,
         "DISK_VOLUMES": [
           {
             "componentTypeId": "com.vmware.csp.component.iaas.proxy.provider",
@@ -145,28 +229,29 @@
             "classId": "dynamicops.api.model.DiskInputModel",
             "typeFilter": null,
             "data": {
-              "DISK_CAPACITY": 3,
-              "DISK_INPUT_ID": "DISK_INPUT_ID1",
-              "DISK_LABEL": "Hard disk 1"
+              "DISK_CAPACITY": 50,
+              "DISK_INPUT_ID": "DISK_INPUT_ID1"
             }
           }
         ],
         "Destroy": true,
-        "EXTERNAL_REFERENCE_ID": "vm-773",
+        "EXTERNAL_REFERENCE_ID": "vm-140330",
+        "Expire": true,
         "IS_COMPONENT_MACHINE": false,
-        "MachineBlueprintName": "CentOS 6.3 - IPAM EXT",
+        "InstallTools": true,
+        "MachineBlueprintName": "CentOS",
         "MachineCPU": 1,
         "MachineDailyCost": 0,
         "MachineDestructionDate": null,
         "MachineExpirationDate": null,
-        "MachineGroupName": "Content",
-        "MachineGuestOperatingSystem": "CentOS 4/5/6/7 (64-bit)",
+        "MachineGroupName": "group",
+        "MachineGuestOperatingSystem": null,
         "MachineInterfaceDisplayName": "vSphere (vCenter)",
         "MachineInterfaceType": "vSphere",
-        "MachineMemory": 512,
-        "MachineName": "Content0061",
-        "MachineReservationName": "IPAM Sandbox",
-        "MachineStorage": 3,
+        "MachineMemory": 1024,
+        "MachineName": "machine.domain.com",
+        "MachineReservationName": "group reservation",
+        "MachineStorage": 50,
         "MachineType": "Virtual",
         "NETWORK_LIST": [
           {
@@ -175,145 +260,30 @@
             "classId": "dynamicops.api.model.NetworkViewModel",
             "typeFilter": null,
             "data": {
-              "NETWORK_ADDRESS": "192.168.110.150",
-              "NETWORK_MAC_ADDRESS": "00:50:56:ae:31:bd",
-              "NETWORK_NAME": "VM Network",
-              "NETWORK_NETWORK_NAME": "ipamext1921681100",
-              "NETWORK_PROFILE": "ipam-ext-192.168.110.0"
+              "NETWORK_ADDRESS": "10.90.64.29",
+              "NETWORK_MAC_ADDRESS": "00:50:56:97:19:d2",
+              "NETWORK_NAME": "S57DVS062-vmp049-10.90.64.0_23"
             }
           }
         ],
+        "PowerOff": true,
+        "Reboot": true,
+        "Reconfigure": true,
+        "Reprovision": true,
+        "Reset": true,
         "SNAPSHOT_LIST": [],
-        "Unregister": true,
-        "VirtualMachine.Admin.UUID": "502e9fb3-6f0d-0b1e-f90f-a769fd406620",
-        "endpointExternalReferenceId": "d322b019-58d4-4d6f-9f8b-d28695a716c0",
-        "ip_address": "192.168.110.150",
-        "machineId": "4fc33663-992d-49f8-af17-df7ce4831aa0"
-      },
-      "links": [
-        {
-          "@type": "link",
-          "rel": "GET: Request",
-          "href": "http://localhost/catalog-service/api/consumer/requests/dcb12203-93f4-4873-a7d5-1757f3696141"
-        },
-        {
-          "@type": "link",
-          "rel": "GET: Parent Resource",
-          "href": "http://localhost/catalog-service/api/consumer/resourceViews/b313acd6-0738-439c-b601-e3ebf9ebb49b"
-        },
-        {
-          "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.virtual.Destroy}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/51bf8bd7-8553-4b0d-b580-41ab0cfaf9a5/actions/654b4c71-e84f-40c7-9439-fd409fea7323/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.virtual.Destroy}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/51bf8bd7-8553-4b0d-b580-41ab0cfaf9a5/actions/654b4c71-e84f-40c7-9439-fd409fea7323/requests"
-        },
-        {
-          "@type": "link",
-          "rel": "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Unregister}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/51bf8bd7-8553-4b0d-b580-41ab0cfaf9a5/actions/f3ae9408-885a-4a3a-9200-43366f2aa163/requests/template"
-        },
-        {
-          "@type": "link",
-          "rel": "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.Unregister}",
-          "href": "http://localhost/catalog-service/api/consumer/resources/51bf8bd7-8553-4b0d-b580-41ab0cfaf9a5/actions/f3ae9408-885a-4a3a-9200-43366f2aa163/requests"
-        }
-      ]
-    },
-    {
-      "@type": "CatalogResourceView",
-      "resourceId": "169b596f-e4c0-4b25-ba44-18cb19c0fd65",
-      "iconId": "existing_network",
-      "name": "ipamext1921681100",
-      "description": "Infoblox External Network",
-      "status": null,
-      "catalogItemId": null,
-      "catalogItemLabel": null,
-      "requestId": "dcb12203-93f4-4873-a7d5-1757f3696141",
-      "requestState": "SUCCESSFUL",
-      "resourceType": "Infrastructure.Network.Network.Existing",
-      "owners": [
-        "Jason Cloud Admin"
-      ],
-      "businessGroupId": "53619006-56bb-4788-9723-9eab79752cc1",
-      "tenantId": "vsphere.local",
-      "dateCreated": "2017-07-17T13:27:17.526Z",
-      "lastUpdated": "2017-07-17T13:33:25.521Z",
-      "lease": {
-        "start": "2017-07-17T13:26:42.079Z",
-        "end": null
-      },
-      "costs": null,
-      "costToDate": null,
-      "totalCost": null,
-      "parentResourceId": "b313acd6-0738-439c-b601-e3ebf9ebb49b",
-      "hasChildren": false,
-      "data": {
-        "Description": "Infoblox External Network",
-        "IPAMEndpointId": "1c2b6237-540a-43c3-8c06-b37a1d274b44",
-        "IPAMEndpointName": "Infoblox - nios01a",
-        "Name": "ipamext1921681100",
-        "_archiveDays": 5,
-        "_hasChildren": false,
-        "_leaseDays": null,
-        "_number_of_instances": 1,
-        "dns": {
-          "componentTypeId": "com.vmware.csp.iaas.blueprint.service",
-          "componentId": null,
-          "classId": "Infrastructure.Network.Network.DnsWins",
-          "typeFilter": null,
-          "data": {
-            "alternate_wins": null,
-            "dns_search_suffix": null,
-            "dns_suffix": null,
-            "preferred_wins": null,
-            "primary_dns": null,
-            "secondary_dns": null
-          }
-        },
-        "gateway": null,
-        "ip_ranges": [
-          {
-            "componentTypeId": "com.vmware.csp.iaas.blueprint.service",
-            "componentId": null,
-            "classId": "Infrastructure.Network.Network.IpRanges",
-            "typeFilter": null,
-            "data": {
-              "description": "",
-              "end_ip": "",
-              "externalId": "network/default-vra/192.168.110.0/24",
-              "id": "b078d23a-1c3d-4458-ab57-e352c80e6d55",
-              "name": "192.168.110.0/24",
-              "start_ip": ""
-            }
-          }
-        ],
-        "network_profile": "ipam-ext-192.168.110.0",
-        "providerBindingId": "CentOS63Infoblox",
-        "providerId": "2fbaabc5-3a48-488a-9f2a-a42616345445",
-        "subnet_mask": "255.255.255.0",
-        "subtenantId": "53619006-56bb-4788-9723-9eab79752cc1"
-      },
-      "links": [
-        {
-          "@type": "link",
-          "rel": "GET: Request",
-          "href": "http://localhost/catalog-service/api/consumer/requests/dcb12203-93f4-4873-a7d5-1757f3696141"
-        },
-        {
-          "@type": "link",
-          "rel": "GET: Parent Resource",
-          "href": "http://localhost/catalog-service/api/consumer/resourceViews/b313acd6-0738-439c-b601-e3ebf9ebb49b"
-        }
-      ]
+        "Shutdown": true,
+        "Suspend": true,
+        "VirtualMachine.Admin.UUID": "50176ea8-c6b6-a63e-80d0-d2dc8c4b4fc5",
+        "endpointExternalReferenceId": "2f993f9c-f1c7-43ae-b798-33ed14bb6ec3",
+        "ip_address": "10.90.64.29",
+        "machineId": "447c2c47-8109-4c9b-b572-9291e3a6310c"
+      }
     }
   ],
   "metadata": {
     "size": 20,
-    "totalElements": 3,
+    "totalElements": 2,
     "totalPages": 1,
     "number": 1,
     "offset": 0

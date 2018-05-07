@@ -6,42 +6,39 @@ import (
 	"log"
 )
 
-func (c *Client) DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error) {
-	destroyMachineAction, errDestroyAction := c.getDestroyAction(resourceViewTemplate)
-	if errDestroyAction != nil {
-		if errDestroyAction.Error() == "resource is not created or not found" {
+func (c *RestClient) DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error) {
+	action, err := c.getDestroyAction(resourceViewTemplate)
+	if err != nil {
+		if err.Error() == "resource is not created or not found" {
 			return nil
 		}
-		return fmt.Errorf("destory Machine action template failed to load: %v", errDestroyAction)
+		return fmt.Errorf("destory Machine action template failed to load: %v", err)
 	}
 
-	_, errDestroyMachine := destroyMachineAction.Execute()
+	_, errDestroyMachine := action.Execute()
 
 	if errDestroyMachine != nil {
-		return fmt.Errorf("destory Machine machine operation failed: %v", errDestroyMachine)
+		return fmt.Errorf("destory machine operation failed: %v", errDestroyMachine)
 	}
 	return nil
 }
 
-func (c *Client) PowerOffMachine(powerOffTemplate *ActionTemplate, resourceViewTemplate *ResourceViewsTemplate) (*ActionResponseTemplate, error) {
-	powerOffMachineActionURL, err := getActionURL(resourceViewTemplate, "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}")
-
+func (c *RestClient) PowerOffMachine(powerOffTemplate *ActionTemplate, resourceViewTemplate *ResourceViewsTemplate) (error) {
+	action, err := c.getPowerOffAction(resourceViewTemplate)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	actionResponse := new(ActionResponseTemplate)
+	_, errPowerOff := action.Execute()
 
-	err = c.post(powerOffMachineActionURL, powerOffTemplate, actionResponse, expectHttpStatus(201))
-
-	if err != nil {
-		return nil, err
+	if errPowerOff != nil {
+		return fmt.Errorf("power off  machine operation failed: %v", errPowerOff)
 	}
-	return actionResponse, nil
+	return nil
 }
 
 
-func (c *Client) RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error) {
+func (c *RestClient) RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error) {
 	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests", template.CatalogItemID)
 
 	response := new(RequestMachineResponse)

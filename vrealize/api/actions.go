@@ -17,7 +17,7 @@ type ActionTemplate struct {
 }
 
 type Action struct {
-	client   *Client
+	client   *RestClient
 	RelLink  string
 	Url      string
 	Template ActionTemplate
@@ -39,7 +39,7 @@ func (a *Action) Execute() (*ActionResponseTemplate, error) {
 
 }
 
-func (c *Client) getAction(resourceViewsTemplate *ResourceViewsTemplate, templateLink string, actionLink string) (*Action, error) {
+func (c *RestClient) getAction(resourceViewsTemplate *ResourceViewsTemplate, templateLink string, actionLink string) (*Action, error) {
 	templateUrl, err := getActionURL(resourceViewsTemplate, templateLink)
 
 	if err != nil {
@@ -56,7 +56,6 @@ func (c *Client) getAction(resourceViewsTemplate *ResourceViewsTemplate, templat
 
 	return &Action{
 		client:   c,
-		RelLink:  templateUrl,
 		Template: *actionTemplate,
 		Url:      actionUrl,
 	}, nil
@@ -71,10 +70,9 @@ func getActionURL(template *ResourceViewsTemplate, relLink string) (templateActi
 			if template.Content[i].Links[j].Rel == relLink {
 				actionURL = template.Content[i].Links[j].Href
 			}
-
 		}
-
 	}
+
 	if len(actionURL) == 0 {
 		return "", fmt.Errorf("resource is not created or not found")
 	}
@@ -82,12 +80,13 @@ func getActionURL(template *ResourceViewsTemplate, relLink string) (templateActi
 	return actionURL, nil
 }
 
-func (c *Client) getPowerOffAction(resourceViewsTemplate *ResourceViewsTemplate) (*Action, error) {
+func (c *RestClient) getPowerOffAction(resourceViewsTemplate *ResourceViewsTemplate) (*Action, error) {
 	relLink := "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}"
-	return c.getAction(resourceViewsTemplate, relLink, "")
+	actionLink := "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}"
+	return c.getAction(resourceViewsTemplate, relLink, actionLink)
 }
 
-func (c *Client) getDestroyAction(resourceViewsTemplate *ResourceViewsTemplate) (*Action, error) {
+func (c *RestClient) getDestroyAction(resourceViewsTemplate *ResourceViewsTemplate) (*Action, error) {
 	relLink := "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.destroy.name}"
 	actionLink := "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.destroy.name}"
 	return c.getAction(resourceViewsTemplate, relLink, actionLink)

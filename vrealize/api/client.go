@@ -10,20 +10,37 @@ import (
 )
 
 const (
-	fmtRequestBase = "/catalog-service/api/consumer/requests"
-	fmtRequest = fmtRequestBase + "/%s"
+	fmtRequestBase          = "/catalog-service/api/consumer/requests"
+	fmtRequest              = fmtRequestBase + "/%s"
 	fmtRequestResourceViews = fmtRequestBase + "/%s/resourceViews"
 
-	fmtResourcesBase = "/catalog-service/api/consumer/resources"
+	fmtResourcesBase  = "/catalog-service/api/consumer/resources"
 	fmtActionTemplate = fmtResourcesBase + "/%s/actions/%s/requests/template"
-	fmtActionRequest = fmtResourcesBase + "/%s/actions/%s/requests"
+	fmtActionRequest  = fmtResourcesBase + "/%s/actions/%s/requests"
 
-	fmtCatalogItemsTemplate = "/catalog-service/api/consumer/entitledCatalogItems/%s/requests/template"
+	fmtCatalogItemsSearch = "/catalog-service/api/consumer/entitledCatalogItems?$filter=name+eq+'%s'"
 )
-//Client - This struct is used to store information provided in .tf file under provider block
-//Later on, this stores bearToken after successful authentication and uses that token for next
-//REST get or post calls.
-type Client struct {
+
+type BaseClient interface {
+	GetRequestStatus(requestId string) (*RequestStatusView, error)
+	GetResourceViews(requestId string) (*ResourceViewsTemplate, error)
+}
+
+type Client interface {
+	BaseClient
+	ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error)
+	ReadCatalogByName(catalogName string) (*CatalogItemTemplate, error)
+
+	PowerOffMachine(powerOffTemplate *ActionTemplate, resourceViewTemplate *ResourceViewsTemplate) (*ActionResponseTemplate, error)
+	RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error)
+}
+
+type DeleteClient interface {
+	BaseClient
+	DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error)
+}
+
+type RestClient struct {
 	Username    string
 	Password    string
 	BaseURL     string
@@ -33,29 +50,24 @@ type Client struct {
 	HTTPClient  *sling.Sling
 }
 
-//AuthRequest - This struct contains the user information provided by user
-//and for authentication details of this struct are used.
 type AuthRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Tenant   string `json:"tenant"`
 }
 
-//AuthResponse - This struct contains response of user authentication call.
 type AuthResponse struct {
 	Expires time.Time `json:"expires"`
 	ID      string    `json:"id"`
 	Tenant  string    `json:"tenant"`
 }
 
-func NewClient(username string, password string, tenant string, baseURL string, insecure bool) Client {
-	// This overrides the DefaultTransport which is probably ok
-	// since we're generally only using a single client.
+func NewClient(username string, password string, tenant string, baseURL string, insecure bool) RestClient {
 	transport := http.DefaultTransport.(*http.Transport)
 	transport.TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: insecure,
 	}
-	return Client{
+	return RestClient{
 		Username: username,
 		Password: password,
 		Tenant:   tenant,
@@ -67,7 +79,7 @@ func NewClient(username string, password string, tenant string, baseURL string, 
 	}
 }
 
-func (c *Client) Authenticate() error {
+func (c *RestClient) Authenticate() error {
 	params := &AuthRequest{
 		Username: c.Username,
 		Password: c.Password,
@@ -88,7 +100,7 @@ func (c *Client) Authenticate() error {
 	return nil
 }
 
-func (c *Client) post(requestUrl string, requestBody interface{}, response interface{}, validate func(*http.Response) bool) error {
+func (c *RestClient) post(requestUrl string, requestBody interface{}, response interface{}, validate func(*http.Response) bool) error {
 	apiError := new(Error)
 	resp, err := c.HTTPClient.New().Post(requestUrl).BodyJSON(requestBody).Receive(response, apiError)
 
@@ -107,7 +119,7 @@ func (c *Client) post(requestUrl string, requestBody interface{}, response inter
 	return nil
 }
 
-func (c *Client) get(requestUrl string, response interface{}, validate func(*http.Response) bool) (error) {
+func (c *RestClient) get(requestUrl string, response interface{}, validate func(*http.Response) bool) (error) {
 	apiError := new(Error)
 
 	resp, err := c.HTTPClient.New().Get(requestUrl).Receive(response, apiError)

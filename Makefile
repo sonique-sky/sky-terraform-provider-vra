@@ -5,12 +5,12 @@ PKG=/go/src/github.com/sonique-sky/${APP}
 TAG=timwoolford/${APP}:0.1.$(CIRCLE_BUILD_NUM)
 
 BIN=$(firstword $(subst :, ,${GOPATH}))/bin
-GODEP = $(BIN)/dep
+VENDOR = $(BIN)/govendor
 M = $(shell printf "\033[34;1m▶\033[0m")
 
 .PHONY: gobuild
 gobuild: vendor ; $(info $(M) building…)
-	GOOS=linux go build -v -o bin/${APP} ./main
+	GOOS=darwin go build -v -o bin/${APP}
 
 .PHONY: gotest
 gotest: gobuild ; $(info $(M) running tests…)
@@ -40,14 +40,7 @@ clean: ; $(info $(M) cleaning…)
 .PHONY: vendor
 vendor: .vendor
 
-.vendor: Gopkg.toml Gopkg.lock
-	command -v $(GODEP) >/dev/null 2>&1 || go get github.com/golang/dep/cmd/dep
-	$(GODEP) ensure -v
+.vendor:
+	command -v $(VENDOR) >/dev/null 2>&1 || go get -u github.com/kardianos/govendor
+	$(VENDOR) add +external
 	@touch $@
-
-clean-minikube:
-	helm delete ${APP} --purge
-
-.PHONY: deploy-minikube
-deploy-minikube:
-	helm upgrade --install ${APP} charts/minikube --namespace monitoring

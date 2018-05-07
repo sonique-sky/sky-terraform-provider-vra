@@ -6,51 +6,42 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"errors"
+	"io/ioutil"
+	"encoding/json"
 )
 
 func TestAPIClient_RequestMachine(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("GET", "http://localhost/catalog-service/"+
-		"api/consumer/entitledCatalogItems/e5dd4fba-45ed-4943-b1fc-7f96239286be/requests/template",
-		httpmock.NewStringResponder(200, testData("request_template.json")))
+	catalogId := "e5dd4fba-45ed-4943-b1fc-7f96239286be"
+	template := catalogItem()
 
-	httpmock.RegisterResponder("POST", "http://localhost/catalog-service/"+
-		"api/consumer/entitledCatalogItems/e5dd4fba-45ed-4943-b1fc-7f96239286be/requests",
-		httpmock.NewStringResponder(201, testData("request_list.json")))
-
-	template, err := client.GetCatalogItem("e5dd4fba-45ed-4943-b1fc-7f96239286be")
-	if err != nil {
-		t.Errorf("Failed to get catalog item template %v.", err)
-	}
-	if len(template.CatalogItemID) == 0 {
-		t.Errorf("Catalog Id is empty.")
-	}
+	path := fmt.Sprintf("http://localhost/catalog-service/api/consumer/entitledCatalogItems/%s/requests", catalogId)
+	httpmock.RegisterResponder("POST", path,
+		httpmock.NewStringResponder(201, testData("request_list")))
 
 	requestMachine, errorRequestMachine := client.RequestMachine(template)
 
-	if errorRequestMachine != nil {
-		t.Errorf("Failed to request the machine %v.", errorRequestMachine)
-	}
+	assert.Nil(t, errorRequestMachine)
+	assert.Equal(t, "b2907df7-6c36-4e30-9c62-a21f293b067a", requestMachine.ID)
+}
 
-	if len(requestMachine.ID) == 0 {
-		t.Errorf("Failed to request machine.")
-	}
+func TestAPIClient_RequestMachine_Failure(t *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
 
-	httpmock.RegisterResponder("POST", "http://localhost/catalog-service/"+
-		"api/consumer/entitledCatalogItems/e5dd4fba-45ed-4943-b1fc-7f96239286be/requests",
-		httpmock.NewErrorResponder(errors.New(testData("api_error.json"))))
+	catalogId := "e5dd4fba-45ed-4943-b1fc-7f96239286be"
+	template := catalogItem()
 
-	requestMachine, errorRequestMachine = client.RequestMachine(template)
+	path := fmt.Sprintf("http://localhost/catalog-service/api/consumer/entitledCatalogItems/%s/requests", catalogId)
+	httpmock.RegisterResponder("POST", path,
+		httpmock.NewErrorResponder(errors.New(testData("api_error"))))
 
-	if errorRequestMachine == nil {
-		t.Errorf("Failed to generate exception.")
-	}
+	requestMachine, errorRequestMachine := client.RequestMachine(template)
 
-	if requestMachine != nil {
-		t.Errorf("Deploy machine request succeeded.")
-	}
+	assert.NotNil(t, errorRequestMachine)
+	assert.Nil(t, requestMachine)
 }
 
 func TestAPIClient_DestroyMachine(t *testing.T) {
@@ -59,19 +50,14 @@ func TestAPIClient_DestroyMachine(t *testing.T) {
 	resourceId := "b313acd6-0738-439c-b601-e3ebf9ebb49b"
 	actionId := "3da0ca14-e7e2-4d7b-89cb-c6db57440d72"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtRequestResourceViews, resourceId),
-		httpmock.NewStringResponder(200, testData("resource_views.json")))
-
 	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtActionTemplate, resourceId, actionId),
-		httpmock.NewStringResponder(200, testData("destroy_template.json")))
+		httpmock.NewStringResponder(200, testData("destroy_template")))
 
 	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+fmtActionRequest, resourceId, actionId),
 		httpmock.NewStringResponder(201, "{}"))
 
-	templateResources, errTemplate := client.GetResourceViews(resourceId)
-	if errTemplate != nil {
-		t.Errorf("Failed to get the template resources %v", errTemplate)
-	}
+	templateResources := resourceViews()
+
 	err := client.DestroyMachine(templateResources)
 
 	assert.Nil(t, err)
@@ -83,20 +69,29 @@ func TestAPIClient_DestroyMachine_NotFound(t *testing.T) {
 	resourceId := "b313acd6-0738-439c-b601-e3ebf9ebb49b"
 	actionId := "3da0ca14-e7e2-4d7b-89cb-c6db57440d72"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtRequestResourceViews, resourceId),
-		httpmock.NewStringResponder(200, testData("resource_views.json")))
-
 	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtActionTemplate, resourceId, actionId),
-		httpmock.NewStringResponder(200, testData("destroy_template.json")))
+		httpmock.NewStringResponder(200, testData("destroy_template")))
 
 	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+fmtActionRequest, resourceId, actionId),
 		httpmock.NewStringResponder(201, "{}"))
 
-	templateResources, errTemplate := client.GetResourceViews(resourceId)
-	if errTemplate != nil {
-		t.Errorf("Failed to get the template resources %v", errTemplate)
-	}
+	templateResources := resourceViews()
+
 	err := client.DestroyMachine(templateResources)
 
 	assert.Nil(t, err)
+}
+
+func resourceViews() *ResourceViewsTemplate {
+	resourceViewsTemplate := new(ResourceViewsTemplate)
+	data, _ := ioutil.ReadFile("test_data/resource_views.json")
+	json.Unmarshal(data, resourceViewsTemplate)
+	return resourceViewsTemplate
+}
+
+func catalogItem() *CatalogItemTemplate {
+	resourceViewsTemplate := new(CatalogItemTemplate)
+	data, _ := ioutil.ReadFile("test_data/catalog_item_request_template.json")
+	json.Unmarshal(data, resourceViewsTemplate)
+	return resourceViewsTemplate
 }
