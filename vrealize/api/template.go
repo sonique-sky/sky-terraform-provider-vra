@@ -8,6 +8,7 @@ type ResourceViewsTemplate struct {
 	Content []struct {
 		ResourceID   string `json:"resourceId"`
 		RequestState string `json:"requestState"`
+		ResourceType string `json:"resourceType"`
 		Links []struct {
 			Href string `json:"href"`
 			Rel  string `json:"rel"`

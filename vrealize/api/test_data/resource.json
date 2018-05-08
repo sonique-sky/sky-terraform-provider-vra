@@ -1,0 +1,549 @@
+{
+  "id": "dd3ad4bc-f7f2-46dd-bc31-3bb3c1ea460c",
+  "iconId": "Infrastructure.CatalogItem.Machine.Virtual.vSphere",
+  "resourceTypeRef": {
+    "id": "Infrastructure.Virtual",
+    "label": "Virtual Machine"
+  },
+  "name": "vm007203",
+  "description": "Sandbox Cluster SLU - bastion",
+  "status": "ACTIVE",
+  "catalogItem": null,
+  "requestId": "76050272-550b-4783-8673-83712cb37375",
+  "providerBinding": {
+    "bindingId": "447c2c47-8109-4c9b-b572-9291e3a6310c",
+    "providerRef": {
+      "id": "f8d54a24-ed6c-46f6-bf21-c82d503c7af8",
+      "label": "Infrastructure Service"
+    }
+  },
+  "owners": [
+    {
+      "tenantName": "vsphere.local",
+      "ref": "SVC-DOST-VDC-AUTO@bskyb.com",
+      "type": "USER",
+      "value": "SVC-DOST-VDC-AUTO SVC-DOST-VDC-AUTO"
+    }
+  ],
+  "organization": {
+    "tenantRef": "vsphere.local",
+    "tenantLabel": "vsphere.local",
+    "subtenantRef": "e20a48d9-9371-428e-8a03-7427041dfe0f",
+    "subtenantLabel": "UKIS South Development"
+  },
+  "dateCreated": "2018-05-04T08:37:15.216Z",
+  "lastUpdated": "2018-05-04T08:37:23.334Z",
+  "hasLease": true,
+  "lease": {
+    "start": "2018-05-04T08:31:15.825Z"
+  },
+  "leaseForDisplay": null,
+  "hasCosts": true,
+  "totalCost": null,
+  "parentResourceRef": {
+    "id": "5cfd028c-dac3-46ce-8a79-e5f994459726",
+    "label": "DAT Self-Managed RHEL 7 PECR (UKIS South Development)-95168344"
+  },
+  "hasChildren": false,
+  "operations": [
+    {
+      "name": "Change Availability Zone",
+      "description": "Changes the machine's availability zone. You can also use this to see if the machine is currently assigned to an availability zone.",
+      "iconId": "edc91e96-df9f-44dd-9caa-ed713dc8cdd3",
+      "type": "ACTION",
+      "id": "edc91e96-df9f-44dd-9caa-ed713dc8cdd3",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.core.designer.service",
+      "bindingId": "vsphere.local!::!0e40d9e3-5de2-4ef7-8591-19ad0307c883",
+      "hasForm": true,
+      "formScale": "BIG"
+    },
+    {
+      "name": "Connect to Remote Console",
+      "description": "Infrastructure connect using remote console",
+      "iconId": "cafe_default_icon_genericResourceOperation",
+      "type": "EXTENSION",
+      "id": "fcbf9796-cabe-4d92-ad5c-ebb7843787ab",
+      "extensionId": "csp.places.iaas.item.window.ConnectViaVmrc",
+      "providerTypeId": null,
+      "bindingId": null,
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Connect using SSH",
+      "description": "Infrastructure connect using SSH",
+      "iconId": "cafe_default_icon_genericResourceOperation",
+      "type": "EXTENSION",
+      "id": "0c369513-715c-42af-a9c7-260031244dae",
+      "extensionId": "csp.places.iaas.item.window.ConnectViaSsh",
+      "providerTypeId": null,
+      "bindingId": null,
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Connect using VMRC",
+      "description": "Infrastructure connect using VMRC",
+      "iconId": "cafe_default_icon_genericResourceOperation",
+      "type": "EXTENSION",
+      "id": "bcf88028-10e9-44bc-a02c-9f35ff4a45ae",
+      "extensionId": "csp.places.iaas.item.nowindow.ConnectViaNativeVmrc",
+      "providerTypeId": null,
+      "bindingId": null,
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Create Snapshot",
+      "description": "Create a snapshot for this machine.",
+      "iconId": "virtualCreateSnapshot.png",
+      "type": "ACTION",
+      "id": "867706dc-ae31-4fb3-93e9-a9b17e4d9770",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Virtual.Action.CreateSnapshot",
+      "hasForm": true,
+      "formScale": "SMALL"
+    },
+    {
+      "name": "Destroy",
+      "description": "Destroy a virtual machine.",
+      "iconId": "virtualDestroy.png",
+      "type": "ACTION",
+      "id": "5883bbea-cd9a-4bf3-a2b3-f6cc20135435",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Virtual.Action.Destroy",
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Power Cycle",
+      "description": "Reset a machine.",
+      "iconId": "machineReset.png",
+      "type": "ACTION",
+      "id": "0f5285d3-58bc-4ebb-9c9e-9ba809783317",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Machine.Action.Reset",
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Power Off",
+      "description": "Power off a machine.",
+      "iconId": "machinePowerOff.png",
+      "type": "ACTION",
+      "id": "aad26bfa-e656-4aa6-a5e3-011183681bcf",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Machine.Action.PowerOff",
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Reboot",
+      "description": "Reboot a machine.",
+      "iconId": "machineReboot.png",
+      "type": "ACTION",
+      "id": "9f870747-3ee4-49f3-8881-07fb8e54d428",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Machine.Action.Reboot",
+      "hasForm": false,
+      "formScale": null
+    },
+    {
+      "name": "Reconfigure",
+      "description": "Reconfigure a machine.",
+      "iconId": "machineReconfigure.png",
+      "type": "ACTION",
+      "id": "4ae8147e-ce45-4b25-a8a7-3c0f02281363",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Machine.Action.Reconfigure",
+      "hasForm": true,
+      "formScale": "BIG"
+    },
+    {
+      "name": "Register a host for downtime",
+      "description": "Makes a request to Monitoring for the server to be added to the downtime register. This will suppress any alerts for the duration of the downtime.",
+      "iconId": "565f1f3f-d1ab-409d-b869-8428b63de9e0",
+      "type": "ACTION",
+      "id": "565f1f3f-d1ab-409d-b869-8428b63de9e0",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.core.designer.service",
+      "bindingId": "vsphere.local!::!4beaaff6-fc10-4441-a8c2-f3ecb30c888c",
+      "hasForm": true,
+      "formScale": "BIG"
+    },
+    {
+      "name": "Shutdown",
+      "description": "Shutdown a machine.",
+      "iconId": "machineShutdown.png",
+      "type": "ACTION",
+      "id": "d7b3eb8b-ce09-4696-853f-9c30934a06cf",
+      "extensionId": null,
+      "providerTypeId": "com.vmware.csp.iaas.blueprint.service",
+      "bindingId": "Infrastructure.Machine.Action.Shutdown",
+      "hasForm": false,
+      "formScale": null
+    }
+  ],
+  "forms": {
+    "catalogResourceInfoHidden": true,
+    "details": {
+      "type": "extension",
+      "extensionId": "csp.places.iaas.item.details",
+      "extensionPointId": null
+    }
+  },
+  "resourceData": {
+    "entries": [
+      {
+        "key": "ConnectViaSsh",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "MachineGuestOperatingSystem",
+        "value": {
+          "type": "string",
+          "value": "Red Hat Enterprise Linux 7 (64-bit)"
+        }
+      },
+      {
+        "key": "MachineMemory",
+        "value": {
+          "type": "integer",
+          "value": 1024
+        }
+      },
+      {
+        "key": "DISK_VOLUMES",
+        "value": {
+          "type": "multiple",
+          "elementTypeId": "COMPLEX",
+          "items": [
+            {
+              "type": "complex",
+              "componentTypeId": "com.vmware.csp.component.iaas.proxy.provider",
+              "componentId": null,
+              "classId": "dynamicops.api.model.DiskInputModel",
+              "typeFilter": null,
+              "values": {
+                "entries": [
+                  {
+                    "key": "DISK_INPUT_ID",
+                    "value": {
+                      "type": "string",
+                      "value": "DISK_INPUT_ID1"
+                    }
+                  },
+                  {
+                    "key": "DISK_CAPACITY",
+                    "value": {
+                      "type": "integer",
+                      "value": 50
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "MachineBlueprintName",
+        "value": {
+          "type": "string",
+          "value": "DAT Self-Managed RHEL 7 PECR (UKIS South Development)"
+        }
+      },
+      {
+        "key": "Suspend",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "MachineInterfaceType",
+        "value": {
+          "type": "string",
+          "value": "vSphere"
+        }
+      },
+      {
+        "key": "MachineCPU",
+        "value": {
+          "type": "integer",
+          "value": 1
+        }
+      },
+      {
+        "key": "MachineExpirationDate"
+      },
+      {
+        "key": "ConnectViaNativeVmrc",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "PowerOff",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "IS_COMPONENT_MACHINE",
+        "value": {
+          "type": "boolean",
+          "value": false
+        }
+      },
+      {
+        "key": "ChangeLease",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "endpointExternalReferenceId",
+        "value": {
+          "type": "string",
+          "value": "2f993f9c-f1c7-43ae-b798-33ed14bb6ec3"
+        }
+      },
+      {
+        "key": "MachineInterfaceDisplayName",
+        "value": {
+          "type": "string",
+          "value": "vSphere (vCenter)"
+        }
+      },
+      {
+        "key": "VirtualMachine.Admin.UUID",
+        "value": {
+          "type": "string",
+          "value": "50176ea8-c6b6-a63e-80d0-d2dc8c4b4fc5"
+        }
+      },
+      {
+        "key": "Destroy",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "MachineReservationName",
+        "value": {
+          "type": "string",
+          "value": "SLU DAT RHEL [UKIS South Development] (TRUSTED)"
+        }
+      },
+      {
+        "key": "NETWORK_LIST",
+        "value": {
+          "type": "multiple",
+          "elementTypeId": "COMPLEX",
+          "items": [
+            {
+              "type": "complex",
+              "componentTypeId": "com.vmware.csp.component.iaas.proxy.provider",
+              "componentId": null,
+              "classId": "dynamicops.api.model.NetworkViewModel",
+              "typeFilter": null,
+              "values": {
+                "entries": [
+                  {
+                    "key": "NETWORK_ADDRESS",
+                    "value": {
+                      "type": "string",
+                      "value": "10.90.64.29"
+                    }
+                  },
+                  {
+                    "key": "NETWORK_NAME",
+                    "value": {
+                      "type": "string",
+                      "value": "S57DVS062-vmp049-10.90.64.0_23"
+                    }
+                  },
+                  {
+                    "key": "NETWORK_MAC_ADDRESS",
+                    "value": {
+                      "type": "string",
+                      "value": "00:50:56:97:19:d2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "Component",
+        "value": {
+          "type": "string",
+          "value": "Machine"
+        }
+      },
+      {
+        "key": "Reset",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "ConnectViaVmrc",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "SNAPSHOT_LIST",
+        "value": {
+          "type": "multiple",
+          "elementTypeId": "COMPLEX",
+          "items": []
+        }
+      },
+      {
+        "key": "InstallTools",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "MachineStatus",
+        "value": {
+          "type": "string",
+          "value": "On"
+        }
+      },
+      {
+        "key": "MachineType",
+        "value": {
+          "type": "string",
+          "value": "Virtual"
+        }
+      },
+      {
+        "key": "MachineStorage",
+        "value": {
+          "type": "integer",
+          "value": 50
+        }
+      },
+      {
+        "key": "EXTERNAL_REFERENCE_ID",
+        "value": {
+          "type": "string",
+          "value": "vm-140330"
+        }
+      },
+      {
+        "key": "MachineGroupName",
+        "value": {
+          "type": "string",
+          "value": "UKIS South Development"
+        }
+      },
+      {
+        "key": "ip_address",
+        "value": {
+          "type": "string",
+          "value": "10.90.64.29"
+        }
+      },
+      {
+        "key": "Reboot",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "ChangeOwner",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "Expire",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "machineId",
+        "value": {
+          "type": "string",
+          "value": "447c2c47-8109-4c9b-b572-9291e3a6310c"
+        }
+      },
+      {
+        "key": "MachineName",
+        "value": {
+          "type": "string",
+          "value": "vm007203"
+        }
+      },
+      {
+        "key": "MachineDestructionDate"
+      },
+      {
+        "key": "Shutdown",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "Reconfigure",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "Reprovision",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "CreateSnapshot",
+        "value": {
+          "type": "boolean",
+          "value": true
+        }
+      },
+      {
+        "key": "MachineDailyCost",
+        "value": {
+          "type": "decimal",
+          "value": 0
+        }
+      }
+    ]
+  },
+  "destroyDate": null,
+  "pendingRequests": []
+}

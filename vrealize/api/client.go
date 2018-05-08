@@ -31,7 +31,6 @@ type Client interface {
 	ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error)
 	ReadCatalogByName(catalogName string) (*CatalogItemTemplate, error)
 
-	PowerOffMachine(powerOffTemplate *ActionTemplate, resourceViewTemplate *ResourceViewsTemplate) (*ActionResponseTemplate, error)
 	RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error)
 }
 

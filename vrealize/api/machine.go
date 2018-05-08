@@ -6,38 +6,6 @@ import (
 	"log"
 )
 
-func (c *RestClient) DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error) {
-	action, err := c.getDestroyAction(resourceViewTemplate)
-	if err != nil {
-		if err.Error() == "resource is not created or not found" {
-			return nil
-		}
-		return fmt.Errorf("destory Machine action template failed to load: %v", err)
-	}
-
-	_, errDestroyMachine := action.Execute()
-
-	if errDestroyMachine != nil {
-		return fmt.Errorf("destory machine operation failed: %v", errDestroyMachine)
-	}
-	return nil
-}
-
-func (c *RestClient) PowerOffMachine(powerOffTemplate *ActionTemplate, resourceViewTemplate *ResourceViewsTemplate) (error) {
-	action, err := c.getPowerOffAction(resourceViewTemplate)
-	if err != nil {
-		return err
-	}
-
-	_, errPowerOff := action.Execute()
-
-	if errPowerOff != nil {
-		return fmt.Errorf("power off  machine operation failed: %v", errPowerOff)
-	}
-	return nil
-}
-
-
 func (c *RestClient) RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error) {
 	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests", template.CatalogItemID)
 
@@ -59,3 +27,25 @@ func (c *RestClient) RequestMachine(template *CatalogItemTemplate) (*RequestMach
 	return response, nil
 }
 
+func (c *RestClient) GetMachine(resourceId string) (interface{}, error) {
+	path := "/catalog-service/api/consumer/resources/" + resourceId
+
+	c.get(path, resourceTemplate, noCheck)
+}
+
+func (c *RestClient) DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error) {
+	action, err := c.getDestroyAction(resourceViewTemplate)
+	if err != nil {
+		if err.Error() == "resource is not created or not found" {
+			return nil
+		}
+		return fmt.Errorf("destory Machine action template failed to load: %v", err)
+	}
+
+	_, errDestroyMachine := action.Execute()
+
+	if errDestroyMachine != nil {
+		return fmt.Errorf("destory machine operation failed: %v", errDestroyMachine)
+	}
+	return nil
+}

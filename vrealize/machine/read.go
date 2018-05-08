@@ -9,8 +9,8 @@ import (
 func readResource(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(api.Client)
 
-	requestMachineID := d.Id()
-	resourceTemplate, errTemplate := client.GetRequestStatus(requestMachineID)
+	resourceID := d.Id()
+	resourceTemplate, errTemplate := client.GetRequestStatus(resourceID)
 
 	if errTemplate != nil {
 		return fmt.Errorf("Resource view failed to load:  %v", errTemplate)
@@ -22,4 +22,15 @@ func readResource(d *schema.ResourceData, meta interface{}) error {
 		d.Set("failed_message", resourceTemplate.RequestCompletion.CompletionDetails)
 	}
 	return nil
+}
+
+func readRequestStatus(requestId string, meta interface{}) (string, error) {
+	client := meta.(api.Client)
+
+	resourceTemplate, errTemplate := client.GetRequestStatus(requestId)
+
+	if errTemplate != nil {
+		return "", fmt.Errorf("Resource view failed to load:  %v", errTemplate)
+	}
+	return resourceTemplate.Phase, nil
 }

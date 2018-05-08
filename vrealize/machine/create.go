@@ -124,41 +124,40 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 			log.Printf("unknown option [%s] with value [%s] ignoring\n", depField, deploymentConfiguration[depField])
 		}
 	}
-	//Log print of template after values updated
 	log.Printf("Updated template - %v\n", templateCatalogItem.Data)
 
-	//Set a  create machine function call
 	requestMachine, err := client.RequestMachine(templateCatalogItem)
 
-	//Check if error got while create machine call
-	//If Error is occured, through an exception with an error message
 	if err != nil {
-		return fmt.Errorf("Resource Machine Request Failed: %v", err)
+		return fmt.Errorf("resource machine request failed: %v", err)
 	}
-
-	//Set request ID
-	d.SetId(requestMachine.ID)
-	//Set request status
-	d.Set("request_status", "SUBMITTED")
 
 	waitTimeout := d.Get("wait_timeout").(int) * 60
 
+	status := new(api.RequestStatusView)
 	for i := 0; i < waitTimeout/30; i++ {
 		time.Sleep(3e+10)
-		readResource(d, meta)
-
-		if d.Get("request_status") == "SUCCESSFUL" {
-			return nil
+		status, _ = client.GetRequestStatus(requestMachine.ID)
+		if status.Phase == "FAILED" {
+			return fmt.Errorf("instance got failed while creating. Kindly check detail for more information")
 		}
-		if d.Get("request_status") == "FAILED" {
-			//If request is failed during the time then
-			//unset resource details from state.
-			d.SetId("")
-			return fmt.Errorf("instance got failed while creating." +
-				" kindly check detail for more information")
+		if status.Phase == "SUCCESSFUL" {
+			resourceViews, e := client.GetResourceViews(requestMachine.ID)
+			if e != nil {
+				return e
+			}
+
+			for _, resource := range resourceViews.Content {
+				if resource.ResourceType == "Infrastructure.Virtual" {
+					d.SetId(resource.ResourceID)
+					return nil
+				}
+			}
+			return fmt.Errorf("could not find expected resource")
 		}
 	}
-	if d.Get("request_status") == "IN_PROGRESS" {
+
+	if status == nil || status.Phase == "IN_PROGRESS" {
 		//If request is in_progress state during the time then
 		//keep resource details in state files and throw an error
 		//so that the child resource won't go for create call.
