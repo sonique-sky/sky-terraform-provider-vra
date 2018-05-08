@@ -17,13 +17,13 @@ func Resource() *schema.Resource {
 
 func setResourceSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"catalog_name": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
 		"catalog_id": {
 			Type:     schema.TypeString,
 			Computed: true,
+			Optional: true,
+		},
+		"catalog_name": {
+			Type:     schema.TypeString,
 			Optional: true,
 		},
 		"businessgroup_id": {
@@ -35,17 +35,6 @@ func setResourceSchema() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Optional: true,
 			Default:  15,
-		},
-		"request_status": {
-			Type:     schema.TypeString,
-			Computed: true,
-			ForceNew: true,
-		},
-		"failed_message": {
-			Type:     schema.TypeString,
-			Computed: true,
-			ForceNew: true,
-			Optional: true,
 		},
 		"deployment_configuration": {
 			Type:     schema.TypeMap,

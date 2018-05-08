@@ -14,15 +14,6 @@ func deleteResource(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("resource not found")
 	}
 
-	if d.Get("request_status").(string) != "SUCCESSFUL" {
-		if d.Get("request_status").(string) == "FAILED" {
-			d.SetId("")
-			return nil
-		}
-		return fmt.Errorf("machine cannot be deleted while in-progress state. Please try later")
-
-	}
-
 	templateResources, errTemplate := client.GetResourceViews(requestMachineID)
 
 	if errTemplate != nil {

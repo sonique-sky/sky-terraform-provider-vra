@@ -24,6 +24,7 @@ const (
 type BaseClient interface {
 	GetRequestStatus(requestId string) (*RequestStatusView, error)
 	GetResourceViews(requestId string) (*ResourceViewsTemplate, error)
+	GetMachine(resourceId string) (*Resource, error)
 }
 
 type Client interface {

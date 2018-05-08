@@ -1,6 +1,8 @@
 package api
 
-import "time"
+import (
+	"time"
+)
 
 //ResourceViewsTemplate - is used to store information
 //related to resource template information.
@@ -78,4 +80,49 @@ type RequestMachineResponse struct {
 		ID    string `json:"id"`
 		Label string `json:"label"`
 	} `json:"catalogItemRef"`
+}
+
+type ResourceDataEntry struct {
+	Key string `json:"key"`
+	Value struct {
+		Type  string      `json:"type"`
+		Value interface{} `json:"value"`
+	}
+}
+
+type Resource struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Status      string `json:"status"`
+	ResourceData struct {
+		Entries []ResourceDataEntry `json:"entries"`
+	} `json:"resourceData"`
+}
+
+func (r *Resource) StringValue(key string) (string, bool) {
+	for _, val := range r.ResourceData.Entries {
+		if val.Key == key && val.Value.Type == "string" {
+			return val.Value.Value.(string), true
+		}
+	}
+	return "", false
+}
+
+func (r *Resource) IntValue(key string) (int, bool) {
+	for _, val := range r.ResourceData.Entries {
+		if val.Key == key && val.Value.Type == "integer" {
+			return val.Value.Value.(int), true
+		}
+	}
+	return 0, false
+}
+
+func (r *Resource) BoolValue(key string) (bool, bool) {
+	for _, val := range r.ResourceData.Entries {
+		if val.Key == key && val.Value.Type == "boolean" {
+			return val.Value.Value.(bool), true
+		}
+	}
+	return false, false
 }

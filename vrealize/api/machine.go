@@ -27,10 +27,17 @@ func (c *RestClient) RequestMachine(template *CatalogItemTemplate) (*RequestMach
 	return response, nil
 }
 
-func (c *RestClient) GetMachine(resourceId string) (interface{}, error) {
+func (c *RestClient) GetMachine(resourceId string) (*Resource, error) {
+	var resource = new(Resource)
 	path := "/catalog-service/api/consumer/resources/" + resourceId
 
-	c.get(path, resourceTemplate, noCheck)
+	err := c.get(path, resource, noCheck)
+	if err != nil {
+		return nil, err
+	}
+
+	return resource, nil
+
 }
 
 func (c *RestClient) DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error) {

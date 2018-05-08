@@ -150,6 +150,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 			for _, resource := range resourceViews.Content {
 				if resource.ResourceType == "Infrastructure.Virtual" {
 					d.SetId(resource.ResourceID)
+					readResource(d, meta)
 					return nil
 				}
 			}
