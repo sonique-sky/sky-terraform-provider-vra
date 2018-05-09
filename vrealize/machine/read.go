@@ -10,6 +10,21 @@ func readResource(d *schema.ResourceData, meta interface{}) error {
 
 	resourceID := d.Id()
 
-	client.GetMachine(resourceID)
+	resource, err := client.GetMachine(resourceID)
+	if err != nil {
+		return err
+	}
+
+	d.Set("hostname", resource.Name)
+	d.Set("description", resource.Description)
+
+	if val, found := resource.IntValue("cpu"); found {
+		d.Set("cpu", val)
+	}
+
+	if val, found := resource.StringValue("ip_address"); found {
+		d.Set("ip_address", val)
+	}
+
 	return nil
 }
