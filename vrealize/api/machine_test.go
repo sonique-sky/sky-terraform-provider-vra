@@ -50,15 +50,13 @@ func TestAPIClient_DestroyMachine(t *testing.T) {
 	resourceId := "b313acd6-0738-439c-b601-e3ebf9ebb49b"
 	actionId := "3da0ca14-e7e2-4d7b-89cb-c6db57440d72"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtActionTemplate, resourceId, actionId),
+	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+("/catalog-service/api/consumer/resources")+"/%s/actions/%s/requests/template", resourceId, actionId),
 		httpmock.NewStringResponder(200, testData("destroy_template")))
 
 	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+fmtActionRequest, resourceId, actionId),
 		httpmock.NewStringResponder(201, "{}"))
 
-	templateResources := resourceViews()
-
-	err := client.DestroyMachine(templateResources)
+	err := client.DestroyMachine(resourceId)
 
 	assert.Nil(t, err)
 }
@@ -78,9 +76,7 @@ func TestAPIClient_DestroyMachine_NotFound(t *testing.T) {
 	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+fmtActionRequest, resourceId, actionId),
 		httpmock.NewStringResponder(201, "{}"))
 
-	templateResources := resourceViews()
-
-	err := client.DestroyMachine(templateResources)
+	err := client.DestroyMachine(resourceId)
 
 	assert.Nil(t, err)
 }

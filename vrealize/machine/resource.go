@@ -12,6 +12,7 @@ func Resource() *schema.Resource {
 		Update: updateResource,
 		Delete: deleteResource,
 		Schema: setResourceSchema(),
+
 	}
 }
 
@@ -22,13 +23,12 @@ func setResourceSchema() map[string]*schema.Schema {
 			Computed: true,
 			Optional: true,
 		},
-		"catalog_name": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"businessgroup_id": {
+		"hostname": {
 			Type:     schema.TypeString,
 			Computed: true,
+		},
+		"catalog_name": {
+			Type:     schema.TypeString,
 			Optional: true,
 		},
 		"wait_timeout": {

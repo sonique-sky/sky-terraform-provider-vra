@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"log"
 )
 
 type CatalogItemTemplate struct {
@@ -45,8 +46,9 @@ func (c *RestClient) getCatalogItem(uuid string) (*CatalogItemTemplate, error) {
 
 func (c *RestClient) ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error) {
 	catalog := new(CatalogItemTemplate)
-	path := fmt.Sprintf(("/catalog-service/api/consumer/entitledCatalogItems")+"/%s/requests/template", catalogId)
+	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests/template", catalogId)
 
+	log.Printf("Path : %s", path)
 	err := c.get(path, catalog, noCheck)
 	if err != nil {
 		return nil, err

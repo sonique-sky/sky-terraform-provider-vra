@@ -7,6 +7,7 @@ import (
 
 	"github.com/dghubble/sling"
 	"fmt"
+	"log"
 )
 
 const (
@@ -14,30 +15,22 @@ const (
 	fmtRequest              = fmtRequestBase + "/%s"
 	fmtRequestResourceViews = fmtRequestBase + "/%s/resourceViews"
 
-	fmtResourcesBase  = "/catalog-service/api/consumer/resources"
-	fmtActionTemplate = fmtResourcesBase + "/%s/actions/%s/requests/template"
-	fmtActionRequest  = fmtResourcesBase + "/%s/actions/%s/requests"
+	fmtActionRequest = ("/catalog-service/api/consumer/resources") + "/%s/actions/%s/requests"
 
 	fmtCatalogItemsSearch = "/catalog-service/api/consumer/entitledCatalogItems?$filter=name+eq+'%s'"
 )
 
-type BaseClient interface {
+
+type Client interface {
 	GetRequestStatus(requestId string) (*RequestStatusView, error)
 	GetResourceViews(requestId string) (*ResourceViewsTemplate, error)
 	GetMachine(resourceId string) (*Resource, error)
-}
 
-type Client interface {
-	BaseClient
 	ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error)
 	ReadCatalogByName(catalogName string) (*CatalogItemTemplate, error)
 
 	RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error)
-}
-
-type DeleteClient interface {
-	BaseClient
-	DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error)
+	DestroyMachine(resourceId string) (error)
 }
 
 type RestClient struct {
@@ -62,12 +55,12 @@ type AuthResponse struct {
 	Tenant  string    `json:"tenant"`
 }
 
-func NewClient(username string, password string, tenant string, baseURL string, insecure bool) RestClient {
+func NewClient(username string, password string, tenant string, baseURL string, insecure bool) *RestClient {
 	transport := http.DefaultTransport.(*http.Transport)
 	transport.TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: insecure,
 	}
-	return RestClient{
+	return &RestClient{
 		Username: username,
 		Password: password,
 		Tenant:   tenant,
@@ -105,6 +98,7 @@ func (c *RestClient) post(requestUrl string, requestBody interface{}, response i
 	resp, err := c.HTTPClient.New().Post(requestUrl).BodyJSON(requestBody).Receive(response, apiError)
 
 	if err != nil {
+		log.Printf("Http Error : %v", err)
 		return err
 	}
 
@@ -113,6 +107,7 @@ func (c *RestClient) post(requestUrl string, requestBody interface{}, response i
 	}
 
 	if !apiError.isEmpty() {
+		log.Printf("Api Error : %v", apiError.Error())
 		return apiError.Error()
 	}
 
@@ -125,6 +120,7 @@ func (c *RestClient) get(requestUrl string, response interface{}, validate func(
 	resp, err := c.HTTPClient.New().Get(requestUrl).Receive(response, apiError)
 
 	if err != nil {
+		log.Printf("Http Error : %v", err)
 		return err
 	}
 
@@ -133,6 +129,7 @@ func (c *RestClient) get(requestUrl string, response interface{}, validate func(
 	}
 
 	if !apiError.isEmpty() {
+		log.Printf("Api Error : %v", apiError.Error())
 		return apiError.Error()
 	}
 

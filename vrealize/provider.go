@@ -63,7 +63,7 @@ func providerConfig(r *schema.ResourceData) (interface{}, error) {
 		return nil, fmt.Errorf("unable to get auth token: %v", err)
 	}
 
-	return &client, nil
+	return client, nil
 }
 
 func providerResources() map[string]*schema.Resource {

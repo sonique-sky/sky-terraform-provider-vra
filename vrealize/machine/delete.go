@@ -8,19 +8,13 @@ import (
 
 func deleteResource(d *schema.ResourceData, meta interface{}) error {
 	requestMachineID := d.Id()
-	client := meta.(api.DeleteClient)
+	client := meta.(api.Client)
 
 	if len(d.Id()) == 0 {
 		return fmt.Errorf("resource not found")
 	}
 
-	templateResources, errTemplate := client.GetResourceViews(requestMachineID)
-
-	if errTemplate != nil {
-		return fmt.Errorf("Resource view failed to load:  %v", errTemplate)
-	}
-
-	client.DestroyMachine(templateResources)
+	client.DestroyMachine(requestMachineID)
 
 	d.SetId("")
 	return nil

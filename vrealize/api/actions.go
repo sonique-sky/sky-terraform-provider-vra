@@ -18,9 +18,17 @@ type ActionTemplate struct {
 
 type Action struct {
 	client   *RestClient
-	RelLink  string
 	Url      string
 	Template ActionTemplate
+}
+
+type ActionSpec struct {
+	BindingId string `json:"bindingId"`
+	ID        string `json:"id"`
+}
+
+type ActionList struct {
+	Actions []ActionSpec `json:"content"`
 }
 
 type ActionResponseTemplate struct {
@@ -39,55 +47,37 @@ func (a *Action) Execute() (*ActionResponseTemplate, error) {
 
 }
 
-func (c *RestClient) getAction(resourceViewsTemplate *ResourceViewsTemplate, templateLink string, actionLink string) (*Action, error) {
-	templateUrl, err := getActionURL(resourceViewsTemplate, templateLink)
+func (c *RestClient) getDestroyAction(resourceId string) (*Action, error) {
 
+	path := fmt.Sprintf("/catalog-service/api/consumer/resources/%s/actions", resourceId)
+	actionList := new(ActionList)
+	err := c.get(path, actionList, noCheck)
 	if err != nil {
 		return nil, err
 	}
 
-	actionTemplate := new(ActionTemplate)
-	err = c.get(templateUrl, actionTemplate, noCheck)
-	if err != nil {
-		return nil, err
+	if spec, found := getActionSpec(actionList, "Infrastructure.Virtual.Action.Destroy"); found {
+		template := new(ActionTemplate)
+		specErr := c.get(fmt.Sprintf("%s/%s/requests/template", path, spec.ID), template, noCheck)
+		if specErr != nil {
+			return nil, specErr
+		}
+
+		return &Action{
+			client:   c,
+			Url:      fmt.Sprintf("%s/%s/requests", path, spec.ID),
+			Template: *template,
+		}, nil
+
 	}
-
-	actionUrl, err := getActionURL(resourceViewsTemplate, actionLink)
-
-	return &Action{
-		client:   c,
-		Template: *actionTemplate,
-		Url:      actionUrl,
-	}, nil
+	return nil, fmt.Errorf("action not found")
 }
 
-func getActionURL(template *ResourceViewsTemplate, relLink string) (templateActionURL string, err error) {
-	var actionURL string
-	l := len(template.Content)
-	for i := 0; i < l; i++ {
-		lengthLinks := len(template.Content[i].Links)
-		for j := 0; j < lengthLinks; j++ {
-			if template.Content[i].Links[j].Rel == relLink {
-				actionURL = template.Content[i].Links[j].Href
-			}
+func getActionSpec(actionList *ActionList, bindingId string) (ActionSpec, bool) {
+	for _, spec := range actionList.Actions {
+		if spec.BindingId == bindingId {
+			return spec, true
 		}
 	}
-
-	if len(actionURL) == 0 {
-		return "", fmt.Errorf("resource is not created or not found")
-	}
-
-	return actionURL, nil
-}
-
-func (c *RestClient) getPowerOffAction(resourceViewsTemplate *ResourceViewsTemplate) (*Action, error) {
-	relLink := "GET Template: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}"
-	actionLink := "POST: {com.vmware.csp.component.iaas.proxy.provider@resource.action.name.machine.PowerOff}"
-	return c.getAction(resourceViewsTemplate, relLink, actionLink)
-}
-
-func (c *RestClient) getDestroyAction(resourceViewsTemplate *ResourceViewsTemplate) (*Action, error) {
-	relLink := "GET Template: {com.vmware.csp.component.cafe.composition@resource.action.deployment.destroy.name}"
-	actionLink := "POST: {com.vmware.csp.component.cafe.composition@resource.action.deployment.destroy.name}"
-	return c.getAction(resourceViewsTemplate, relLink, actionLink)
+	return ActionSpec{}, false
 }

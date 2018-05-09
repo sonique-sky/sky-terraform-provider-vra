@@ -25,6 +25,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	if catalogErr != nil {
+		log.Printf("FOOOOOO %s", "fofoo")
 		return fmt.Errorf("catalog Lookup failed %v", catalogErr)
 	}
 

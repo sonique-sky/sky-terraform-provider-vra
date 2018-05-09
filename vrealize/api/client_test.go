@@ -12,7 +12,7 @@ import (
 var client RestClient
 
 func init() {
-	client = NewClient(
+	client = *NewClient(
 		"admin@myvra.local",
 		"pass!@#",
 		"vsphere.local",

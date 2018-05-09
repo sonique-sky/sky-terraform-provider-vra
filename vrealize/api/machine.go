@@ -31,6 +31,8 @@ func (c *RestClient) GetMachine(resourceId string) (*Resource, error) {
 	var resource = new(Resource)
 	path := "/catalog-service/api/consumer/resources/" + resourceId
 
+	log.Printf("Path : %s", path)
+
 	err := c.get(path, resource, noCheck)
 	if err != nil {
 		return nil, err
@@ -40,8 +42,8 @@ func (c *RestClient) GetMachine(resourceId string) (*Resource, error) {
 
 }
 
-func (c *RestClient) DestroyMachine(resourceViewTemplate *ResourceViewsTemplate) (error) {
-	action, err := c.getDestroyAction(resourceViewTemplate)
+func (c *RestClient) DestroyMachine(resourceId string) (error){
+	action, err := c.getDestroyAction(resourceId)
 	if err != nil {
 		if err.Error() == "resource is not created or not found" {
 			return nil
