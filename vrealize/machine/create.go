@@ -14,12 +14,12 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(api.Client)
 
 	var templateCatalogItem = new(api.CatalogItemTemplate)
-	var catalogErr = new(error)
+	var catalogErr = *new(error)
 
 	if catalogId, idGiven := d.GetOk("catalog_id"); idGiven {
-		templateCatalogItem, *catalogErr = client.ReadCatalogByID(catalogId.(string))
+		templateCatalogItem, catalogErr = client.ReadCatalogByID(catalogId.(string))
 	} else if catalogName, nameGiven := d.GetOk("catalog_name"); nameGiven {
-		templateCatalogItem, *catalogErr = client.ReadCatalogByName(catalogName.(string))
+		templateCatalogItem, catalogErr = client.ReadCatalogByName(catalogName.(string))
 	} else {
 		return fmt.Errorf("cannot retrieve catalog without 'catalog_id' or 'catalog_name'")
 	}
@@ -37,10 +37,6 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 
 	}
 	log.Printf("createResource->templateCatalogItem.Data %v\n", templateCatalogItem.Data)
-
-	if len(d.Get("businessgroup_id").(string)) > 0 {
-		templateCatalogItem.BusinessGroupID = d.Get("businessgroup_id").(string)
-	}
 
 	//Get all resource keys from blueprint in array
 	var keyList []string
