@@ -15,8 +15,6 @@ const (
 	fmtRequest              = fmtRequestBase + "/%s"
 	fmtRequestResourceViews = fmtRequestBase + "/%s/resourceViews"
 
-	fmtActionRequest = ("/catalog-service/api/consumer/resources") + "/%s/actions/%s/requests"
-
 	fmtCatalogItemsSearch = "/catalog-service/api/consumer/entitledCatalogItems?$filter=name+eq+'%s'"
 )
 
@@ -94,6 +92,7 @@ func (c *RestClient) Authenticate() error {
 }
 
 func (c *RestClient) post(requestUrl string, requestBody interface{}, response interface{}, validate func(*http.Response) bool) error {
+	log.Printf("POST : %s", requestUrl)
 	apiError := new(Error)
 	resp, err := c.HTTPClient.New().Post(requestUrl).BodyJSON(requestBody).Receive(response, apiError)
 
@@ -115,6 +114,7 @@ func (c *RestClient) post(requestUrl string, requestBody interface{}, response i
 }
 
 func (c *RestClient) get(requestUrl string, response interface{}, validate func(*http.Response) bool) (error) {
+	log.Printf("GET: %s", requestUrl)
 	apiError := new(Error)
 
 	resp, err := c.HTTPClient.New().Get(requestUrl).Receive(response, apiError)

@@ -46,5 +46,4 @@ func TestAPIClient_GetDestroyAction_Failure(t *testing.T) {
 	_, err := client.getDestroyAction(resourceId)
 
 	assert.NotNil(t, err)
-	assert.Equal(t, "goo", err.Error())
 }

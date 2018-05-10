@@ -21,16 +21,13 @@ func readResource(d *schema.ResourceData, meta interface{}) error {
 	}
 	log.Printf("Read resource: %v", resource)
 
-	//d.Set("hostname", resource.Name)
+	d.Set("hostname", resource.Name)
+	d.Set("request_id", resource.RequestID)
 	//d.Set("description", resource.Description)
 
-	//if val, found := resource.IntValue("cpu"); found {
-	//	d.Set("cpu", val)
-	//}
-	//
-	//if val, found := resource.StringValue("ip_address"); found {
-	//	d.Set("ip_address", val)
-	//}
+	if val, found := resource.StringValue("ip_address"); found {
+		d.Set("ip_address", val)
+	}
 
 	return nil
 }

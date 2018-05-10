@@ -1,17 +1,40 @@
 {
   "type": "com.vmware.vcac.catalog.domain.request.CatalogItemProvisioningRequest",
-  "catalogItemId": "e5dd4fba-45ed-4943-b1fc-7f96239286be",
-  "requestedFor": "jason@corp.local",
-  "businessGroupId": "53619006-56bb-4788-9723-9eab79752cc1",
+  "catalogItemId": "264cc21e-95c2-4ec1-afe6-5e7c77548048",
+  "requestedFor": "woolfoti@bskyb.com",
+  "businessGroupId": "e20a48d9-9371-428e-8a03-7427041dfe0f",
   "description": null,
   "reasons": null,
   "data": {
-    "CentOS_6.3": {
+    "IAAS_6X_UUID": "b5cf8242-4a82-4320-bd0f-3c67acf2eaf4",
+    "Machine": {
       "componentTypeId": "com.vmware.csp.component.cafe.composition",
       "componentId": null,
       "classId": "Blueprint.Component.Declaration",
-      "typeFilter": "CentOS63*CentOS_6.3",
+      "typeFilter": "DATISPSelfManagedPECRRHEL7*Machine",
       "data": {
+        "CloneSpec": "linux_default",
+        "ExternalWFStubs.BuildingMachine.__tokenName": "DAT Self-Managed RHEL 7 PECR (UKIS South Development)",
+        "ExternalWFStubs.MachineDisposing": "f6d11db2-77ff-4f4b-8368-241ea2498a1d",
+        "ExternalWFStubs.MachineDisposing.__tokenName": "DAT Self-Managed RHEL 7 PECR (UKIS South Development)",
+        "ExternalWFStubs.MachineProvisioned": "3524ff04-0394-48db-adee-4925ea06f9d4",
+        "ExternalWFStubs.MachineProvisioned.__tokenName": "DAT Self-Managed RHEL 7 PECR (UKIS South Development)",
+        "ExternalWFStubs.MachineProvisioned.additionalDiskSize": "",
+        "ExternalWFStubs.MachineProvisioned.availabilityZone": "Any",
+        "ExternalWFStubs.MachineProvisioned.machinetag": "",
+        "ExternalWFStubs.MachineProvisioned.spark_create": "true",
+        "ExternalWFStubs.MachineProvisioned.spark_os": "Red Hat Enterprise Linux 7 (64-bit)",
+        "ExternalWFStubs.MachineProvisioned.spark_ritm": "",
+        "ExternalWFStubs.MachineProvisioned.spark_usedFor": "Development",
+        "ExternalWFStubs.MachineProvisioned.sshKey_value": "",
+        "ExternalWFStubs.MachineProvisioned.tattoo_buildContactEmails": "DL-VDCEngineeringTeam@bskyb.com",
+        "ExternalWFStubs.MachineProvisioned.tattoo_locationOnGuest": "/etc/facter/facts.d/build_facts.yaml",
+        "ExternalWFStubs.MachineProvisioned.tattoo_mountPoint": "",
+        "ExternalWFStubs.MachineProvisioned.urlexec": "",
+        "Machine.SSH": "true",
+        "NetworkProfileNameOptions0": "ukissouthdevelopmentDAT",
+        "VMware.VirtualCenter.Folder": "non-prod\\linux\\no-backup",
+        "VirtualMachine.Network0.NetworkProfileName": "HHE DAT UKIS South Development General (10.74.64.1 - 10.74.64.254)",
         "_allocation": {
           "componentTypeId": "com.vmware.csp.iaas.blueprint.service",
           "componentId": null,
@@ -50,56 +73,74 @@
         },
         "_cluster": 1,
         "_hasChildren": false,
+        "backupOptions": "linuxNonProd",
         "cpu": 1,
         "datacenter_location": null,
-        "description": "Basic IaaS CentOS Machine",
+        "description": "A corporate style VM that you have full administrative access to and that you must administer yourself.",
         "disks": [
           {
-            "componentTypeId": "com.vmware.csp.iaas.blueprint.service",
+            "componentTypeId": null,
             "componentId": null,
-            "classId": "Infrastructure.Compute.Machine.MachineDisk",
+            "classId": "DEFAULT",
             "typeFilter": null,
             "data": {
-              "capacity": 3,
-              "custom_properties": null,
-              "id": 1450725224066,
+              "capacity": 50,
+              "id": 0,
               "initial_location": "",
               "is_clone": true,
-              "label": "Hard disk 1",
+              "label": "",
               "storage_reservation_policy": "",
               "userCreated": false,
+              "user_created": true,
               "volumeId": 0
             }
           }
         ],
-        "guest_customization_specification": "CentOS",
-        "max_network_adapters": -1,
+        "guest_customization_specification": null,
+        "ispLdapGroup": "",
+        "mailComponents": "supportLinuxCorporateStandalone,reservationInformation",
+        "max_network_adapters": 1,
         "max_per_user": 0,
         "max_volumes": 60,
-        "memory": 512,
-        "nics": null,
+        "memory": 1024,
+        "nics": [
+          {
+            "componentTypeId": null,
+            "componentId": null,
+            "classId": "DEFAULT",
+            "typeFilter": null,
+            "data": {
+              "address": "",
+              "assignment_type": "Static",
+              "id": 0,
+              "load_balancing": ""
+            }
+          }
+        ],
         "os_arch": "x86_64",
         "os_distribution": null,
         "os_type": "Linux",
         "os_version": null,
         "property_groups": null,
-        "reservation_policy": null,
+        "reservation_policy": {
+          "componentId": null,
+          "classId": "DEFAULT",
+          "id": "UKIS South Development RHEL (DAT)",
+          "label": "UKIS South Development RHEL (DAT)"
+        },
         "security_groups": [],
         "security_tags": [],
-        "storage": 3
+        "source_machine": null,
+        "source_machine_external_snapshot": null,
+        "source_machine_name": "DAT-rh-7.3-vdc-template-corp-web-pecr-2c0531f",
+        "source_machine_vmsnapshot": null,
+        "storage": 50,
+        "updateTemplate": "true",
+        "vdc.capacityPool.hidden": "UKIS South Development RHEL (DAT)"
       }
     },
-    "_archiveDays": 5,
+    "_archiveDays": 10,
     "_leaseDays": null,
-    "_number_of_instances": 1,
-    "corp192168110024": {
-      "componentTypeId": "com.vmware.csp.component.cafe.composition",
-      "componentId": null,
-      "classId": "Blueprint.Component.Declaration",
-      "typeFilter": "CentOS63*corp192168110024",
-      "data": {
-        "_hasChildren": false
-      }
-    }
+    "_number_of_instances": 1
   }
 }

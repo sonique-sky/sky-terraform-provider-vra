@@ -18,12 +18,19 @@ func Resource() *schema.Resource {
 
 func setResourceSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"catalog_id": {
+		"request_id": {
 			Type:     schema.TypeString,
 			Computed: true,
-			Optional: true,
+		},
+		"catalog_id": {
+			Type:     schema.TypeString,
+			Required: true,
 		},
 		"hostname": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"ip_address": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},

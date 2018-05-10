@@ -95,6 +95,7 @@ type Resource struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
+	RequestID   string `json:"requestId"`
 	ResourceData struct {
 		Entries []ResourceDataEntry `json:"entries"`
 	} `json:"resourceData"`

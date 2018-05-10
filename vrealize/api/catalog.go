@@ -32,18 +32,6 @@ type entitledCatalogItemViews struct {
 	} `json:"metadata"`
 }
 
-func (c *RestClient) getCatalogItem(uuid string) (*CatalogItemTemplate, error) {
-	template := new(CatalogItemTemplate)
-	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests/template", uuid)
-
-	err := c.get(path, template, noCheck)
-	if err != nil {
-		return nil, err
-	}
-
-	return template, nil
-}
-
 func (c *RestClient) ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error) {
 	catalog := new(CatalogItemTemplate)
 	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests/template", catalogId)
@@ -72,5 +60,5 @@ func (c *RestClient) ReadCatalogByName(catalogName string) (*CatalogItemTemplate
 
 	catalog := template.Content[0]
 
-	return c.getCatalogItem(catalog.Item.ID)
+	return c.ReadCatalogByID(catalog.Item.ID)
 }

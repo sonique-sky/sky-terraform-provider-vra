@@ -48,12 +48,16 @@ func TestAPIClient_DestroyMachine(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	resourceId := "b313acd6-0738-439c-b601-e3ebf9ebb49b"
-	actionId := "3da0ca14-e7e2-4d7b-89cb-c6db57440d72"
+	actionId := "5883bbea-cd9a-4bf3-a2b3-f6cc20135435"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+("/catalog-service/api/consumer/resources")+"/%s/actions/%s/requests/template", resourceId, actionId),
+	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost/catalog-service/api/consumer/resources/%s/actions", resourceId),
+		httpmock.NewStringResponder(200, testData("action_list")))
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost/catalog-service/api/consumer/resources/%s/actions/%s/requests/template", resourceId, actionId),
 		httpmock.NewStringResponder(200, testData("destroy_template")))
 
-	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+fmtActionRequest, resourceId, actionId),
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost/catalog-service/api/consumer/resources/%s/actions/%s/requests", resourceId, actionId),
 		httpmock.NewStringResponder(201, "{}"))
 
 	err := client.DestroyMachine(resourceId)
@@ -66,14 +70,17 @@ func TestAPIClient_DestroyMachine_NotFound(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 
 	resourceId := "b313acd6-0738-439c-b601-e3ebf9ebb49b"
-	actionId := "3da0ca14-e7e2-4d7b-89cb-c6db57440d72"
+	actionId := "5883bbea-cd9a-4bf3-a2b3-f6cc20135435"
+
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost/catalog-service/api/consumer/resources/%s/actions", resourceId),
+		httpmock.NewStringResponder(200, testData("action_list")))
 
 	path := fmt.Sprintf("http://localhost/catalog-service/api/consumer/resources/%s/actions/%s/requests/template", resourceId, actionId)
-
 	httpmock.RegisterResponder("GET", path,
 		httpmock.NewStringResponder(200, testData("destroy_template")))
 
-	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+fmtActionRequest, resourceId, actionId),
+	httpmock.RegisterResponder("POST", fmt.Sprintf("http://localhost"+("/catalog-service/api/consumer/resources")+"/%s/actions/%s/requests", resourceId, actionId),
 		httpmock.NewStringResponder(201, "{}"))
 
 	err := client.DestroyMachine(resourceId)
@@ -98,13 +105,6 @@ func TestClient_GetMachine(t *testing.T) {
 
 	ipAddress, _ := resource.StringValue("ip_address")
 	assert.Equal(t, "10.90.64.29", ipAddress)
-}
-
-func resourceViews() *ResourceViewsTemplate {
-	resourceViewsTemplate := new(ResourceViewsTemplate)
-	data, _ := ioutil.ReadFile("test_data/resource_views.json")
-	json.Unmarshal(data, resourceViewsTemplate)
-	return resourceViewsTemplate
 }
 
 func catalogItem() *CatalogItemTemplate {

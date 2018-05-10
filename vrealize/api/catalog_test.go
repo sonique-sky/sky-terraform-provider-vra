@@ -19,7 +19,7 @@ func TestAPIClient_GetCatalogItem(t *testing.T) {
 	httpmock.RegisterResponder("GET", path,
 		httpmock.NewStringResponder(200, testData("catalog_item_request_template")))
 
-	template, err := client.getCatalogItem(catalogId)
+	template, err := client.ReadCatalogByID(catalogId)
 
 	assert.Nil(t, err, "Error should be nil")
 	assert.Equal(t, catalogId, template.CatalogItemID, "Expected catalog ID not returned")
@@ -35,7 +35,7 @@ func TestAPIClient_GetCatalogItem_Fail(t *testing.T) {
 	httpmock.RegisterResponder("GET", path,
 		httpmock.NewErrorResponder(errors.New(testData("api_error"))))
 
-	template, err := client.getCatalogItem(catalogId)
+	template, err := client.ReadCatalogByID(catalogId)
 
 	assert.NotNil(t, err, "Fail to generate exception")
 	assert.Nil(t, template, "No template should be returned")
