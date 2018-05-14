@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-type CatalogItemTemplate struct {
+type RequestTemplate struct {
 	Type            string                 `json:"type"`
 	CatalogItemID   string                 `json:"catalogItemId"`
 	RequestedFor    string                 `json:"requestedFor"`
@@ -32,8 +32,8 @@ type entitledCatalogItemViews struct {
 	} `json:"metadata"`
 }
 
-func (c *RestClient) ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error) {
-	catalog := new(CatalogItemTemplate)
+func (c *RestClient) ReadCatalogByID(catalogId string) (*RequestTemplate, error) {
+	catalog := new(RequestTemplate)
 	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests/template", catalogId)
 
 	log.Printf("Path : %s", path)
@@ -45,9 +45,9 @@ func (c *RestClient) ReadCatalogByID(catalogId string) (*CatalogItemTemplate, er
 	return catalog, nil
 }
 
-func (c *RestClient) ReadCatalogByName(catalogName string) (*CatalogItemTemplate, error) {
+func (c *RestClient) ReadCatalogByName(catalogName string) (*RequestTemplate, error) {
 	template := new(entitledCatalogItemViews)
-	path := fmt.Sprintf(fmtCatalogItemsSearch, catalogName)
+	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems?$filter=name+eq+'%s'", catalogName)
 
 	err := c.get(path, template, noCheck)
 	if err != nil {

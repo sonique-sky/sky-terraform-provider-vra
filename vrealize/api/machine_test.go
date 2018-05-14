@@ -107,8 +107,8 @@ func TestClient_GetMachine(t *testing.T) {
 	assert.Equal(t, "10.90.64.29", ipAddress)
 }
 
-func catalogItem() *CatalogItemTemplate {
-	resourceViewsTemplate := new(CatalogItemTemplate)
+func catalogItem() *RequestTemplate {
+	resourceViewsTemplate := new(RequestTemplate)
 	data, _ := ioutil.ReadFile("test_data/catalog_item_request_template.json")
 	json.Unmarshal(data, resourceViewsTemplate)
 	return resourceViewsTemplate

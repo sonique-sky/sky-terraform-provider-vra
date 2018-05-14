@@ -2,46 +2,46 @@ package machine
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/api"
 	"log"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/api"
 )
 
 func createResource(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(api.Client)
 
-	var templateCatalogItem = new(api.CatalogItemTemplate)
+	var requestTemplate = new(api.RequestTemplate)
 	var catalogErr = *new(error)
 
 	if catalogId, idGiven := d.GetOk("catalog_id"); idGiven {
-		templateCatalogItem, catalogErr = client.ReadCatalogByID(catalogId.(string))
+		requestTemplate, catalogErr = client.ReadCatalogByID(catalogId.(string))
 	} else if catalogName, nameGiven := d.GetOk("catalog_name"); nameGiven {
-		templateCatalogItem, catalogErr = client.ReadCatalogByName(catalogName.(string))
+		requestTemplate, catalogErr = client.ReadCatalogByName(catalogName.(string))
 	} else {
 		return fmt.Errorf("cannot retrieve catalog without 'catalog_id' or 'catalog_name'")
 	}
 
 	if catalogErr != nil {
-		log.Printf("FOOOOOO %s", "fofoo")
 		return fmt.Errorf("catalog Lookup failed %v", catalogErr)
 	}
 
-	log.Printf("createResource->templateCatalogItem %v\n", templateCatalogItem)
+	log.Printf("createResource->requestTemplate %v\n", requestTemplate)
 
 	catalogConfiguration, _ := d.Get("catalog_configuration").(map[string]interface{})
 	for field1 := range catalogConfiguration {
-		templateCatalogItem.Data[field1] = catalogConfiguration[field1]
+		requestTemplate.Data[field1] = catalogConfiguration[field1]
 
 	}
-	log.Printf("createResource->templateCatalogItem.Data %v\n", templateCatalogItem.Data)
+	log.Printf("createResource->requestTemplate.Data %v\n", requestTemplate.Data)
 
 	//Get all resource keys from blueprint in array
 	var keyList []string
-	for field := range templateCatalogItem.Data {
-		if reflect.ValueOf(templateCatalogItem.Data[field]).Kind() == reflect.Map {
+	for field := range requestTemplate.Data {
+		if reflect.ValueOf(requestTemplate.Data[field]).Kind() == reflect.Map {
 			keyList = append(keyList, field)
 		}
 	}
@@ -74,8 +74,8 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 					return fmt.Errorf("resource_configuration key is not in correct format. Expected %s to start with %s\n", configKey, keyList[dataKey]+".")
 				}
 				//Function call which changes the template field values with  user values
-				templateCatalogItem.Data[keyList[dataKey]], replaced = changeTemplateValue(
-					templateCatalogItem.Data[keyList[dataKey]].(map[string]interface{}),
+				requestTemplate.Data[keyList[dataKey]], replaced = changeTemplateValue(
+					requestTemplate.Data[keyList[dataKey]].(map[string]interface{}),
 					splitedArray[1],
 					resourceConfiguration[configKey])
 				if replaced {
@@ -99,7 +99,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 			if strings.Contains(configKey2, keyList[dataKey]) {
 				splitArray := strings.Split(configKey2, keyList[dataKey]+".")
 				log.Printf("Add Loop Contains %+v", splitArray[1])
-				resourceItem := templateCatalogItem.Data[keyList[dataKey]].(map[string]interface{})
+				resourceItem := requestTemplate.Data[keyList[dataKey]].(map[string]interface{})
 				resourceItem = addTemplateValue(
 					resourceItem["data"].(map[string]interface{}),
 					splitArray[1],
@@ -114,16 +114,16 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 		fieldstr := fmt.Sprintf("%s", depField)
 		switch fieldstr {
 		case "description":
-			templateCatalogItem.Description = deploymentConfiguration[depField].(string)
+			requestTemplate.Description = deploymentConfiguration[depField].(string)
 		case "reasons":
-			templateCatalogItem.Reasons = deploymentConfiguration[depField].(string)
+			requestTemplate.Reasons = deploymentConfiguration[depField].(string)
 		default:
 			log.Printf("unknown option [%s] with value [%s] ignoring\n", depField, deploymentConfiguration[depField])
 		}
 	}
-	log.Printf("Updated template - %v\n", templateCatalogItem.Data)
+	log.Printf("Updated template - %v\n", requestTemplate.Data)
 
-	requestMachine, err := client.RequestMachine(templateCatalogItem)
+	requestMachine, err := client.RequestMachine(requestTemplate)
 
 	if err != nil {
 		return fmt.Errorf("resource machine request failed: %v", err)
@@ -134,24 +134,25 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	status := new(api.RequestStatusView)
 	for i := 0; i < waitTimeout/30; i++ {
 		time.Sleep(3e+10)
+
 		status, _ = client.GetRequestStatus(requestMachine.ID)
 		if status.Phase == "FAILED" {
-			return fmt.Errorf("instance got failed while creating. Kindly check detail for more information")
+			return fmt.Errorf("instance got failed while creating - check detail for more information")
 		}
 		if status.Phase == "SUCCESSFUL" {
-			resourceViews, e := client.GetResourceViews(requestMachine.ID)
+			resourceViews, e := client.GetResource(requestMachine.ID, "Infrastructure.Virtual")
 			if e != nil {
 				return e
 			}
 
-			for _, resource := range resourceViews.Content {
-				if resource.ResourceType == "Infrastructure.Virtual" {
-					d.SetId(resource.ResourceID)
-					readResource(d, meta)
-					return nil
-				}
+			if len(resourceViews.Resources) == 0 {
+				return fmt.Errorf("could not find expected resource")
 			}
-			return fmt.Errorf("could not find expected resource")
+
+			resource := resourceViews.Resources[0]
+			d.SetId(resource.ID)
+			readResource(d, meta)
+			return nil
 		}
 	}
 

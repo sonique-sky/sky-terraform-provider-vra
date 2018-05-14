@@ -14,20 +14,19 @@ const (
 	fmtRequestBase          = "/catalog-service/api/consumer/requests"
 	fmtRequest              = fmtRequestBase + "/%s"
 	fmtRequestResourceViews = fmtRequestBase + "/%s/resourceViews"
-
-	fmtCatalogItemsSearch = "/catalog-service/api/consumer/entitledCatalogItems?$filter=name+eq+'%s'"
 )
 
 
 type Client interface {
 	GetRequestStatus(requestId string) (*RequestStatusView, error)
-	GetResourceViews(requestId string) (*ResourceViewsTemplate, error)
+	GetResource(requestId string, resourceType string) (*ResourceWrapper, error)
+	GetResourceViews(requestId string) (*ResourceViews, error)
 	GetMachine(resourceId string) (*Resource, error)
 
-	ReadCatalogByID(catalogId string) (*CatalogItemTemplate, error)
-	ReadCatalogByName(catalogName string) (*CatalogItemTemplate, error)
+	ReadCatalogByID(catalogId string) (*RequestTemplate, error)
+	ReadCatalogByName(catalogName string) (*RequestTemplate, error)
 
-	RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error)
+	RequestMachine(template *RequestTemplate) (*RequestMachineResponse, error)
 	DestroyMachine(resourceId string) (error)
 }
 

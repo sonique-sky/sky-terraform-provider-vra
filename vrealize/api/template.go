@@ -4,9 +4,10 @@ import (
 	"time"
 )
 
-//ResourceViewsTemplate - is used to store information
+//ResourceViews - is used to store information
 //related to resource template information.
-type ResourceViewsTemplate struct {
+
+type ResourceViews struct {
 	Content []struct {
 		ResourceID   string `json:"resourceId"`
 		RequestState string `json:"requestState"`
@@ -88,6 +89,10 @@ type ResourceDataEntry struct {
 		Type  string      `json:"type"`
 		Value interface{} `json:"value"`
 	}
+}
+
+type ResourceWrapper struct {
+	Resources []Resource `json:"content"`
 }
 
 type Resource struct {

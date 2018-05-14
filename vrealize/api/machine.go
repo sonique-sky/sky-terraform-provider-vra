@@ -2,22 +2,12 @@ package api
 
 import (
 	"fmt"
-	"encoding/json"
-	"log"
 )
 
-func (c *RestClient) RequestMachine(template *CatalogItemTemplate) (*RequestMachineResponse, error) {
+func (c *RestClient) RequestMachine(template *RequestTemplate) (*RequestMachineResponse, error) {
 	path := fmt.Sprintf("/catalog-service/api/consumer/entitledCatalogItems/%s/requests", template.CatalogItemID)
 
 	response := new(RequestMachineResponse)
-
-	jsonBody, jErr := json.Marshal(template)
-	if jErr != nil {
-		log.Printf("Error marshalling template as JSON")
-		return nil, jErr
-	} else {
-		log.Printf("JSON Request Info: %s", jsonBody)
-	}
 
 	err := c.post(path, template, response, noCheck)
 	if err != nil {
@@ -30,8 +20,6 @@ func (c *RestClient) RequestMachine(template *CatalogItemTemplate) (*RequestMach
 func (c *RestClient) GetMachine(resourceId string) (*Resource, error) {
 	var resource = new(Resource)
 	path := "/catalog-service/api/consumer/resources/" + resourceId
-
-	log.Printf("Path : %s", path)
 
 	err := c.get(path, resource, noCheck)
 	if err != nil {

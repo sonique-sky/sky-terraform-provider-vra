@@ -24,7 +24,7 @@ func setResourceSchema() map[string]*schema.Schema {
 		},
 		"catalog_id": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"hostname": {
 			Type:     schema.TypeString,
@@ -53,15 +53,6 @@ func setResourceSchema() map[string]*schema.Schema {
 			},
 		},
 		"resource_configuration": {
-			Type:     schema.TypeMap,
-			Optional: true,
-			Elem: &schema.Schema{
-				Type:     schema.TypeMap,
-				Optional: true,
-				Elem:     schema.TypeString,
-			},
-		},
-		"catalog_configuration": {
 			Type:     schema.TypeMap,
 			Optional: true,
 			Elem: &schema.Schema{

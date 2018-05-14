@@ -44,10 +44,13 @@ func (a *Action) Execute() (*ActionResponseTemplate, error) {
 	}
 
 	return actionResponse, nil
-
 }
 
 func (c *RestClient) getDestroyAction(resourceId string) (*Action, error) {
+	return c.getAction(resourceId, "Infrastructure.Virtual.Action.Destroy")
+}
+
+func (c *RestClient) getAction(resourceId string, actionBindingId string) (*Action, error) {
 
 	path := fmt.Sprintf("/catalog-service/api/consumer/resources/%s/actions", resourceId)
 	actionList := new(ActionList)
@@ -56,7 +59,7 @@ func (c *RestClient) getDestroyAction(resourceId string) (*Action, error) {
 		return nil, err
 	}
 
-	if spec, found := getActionSpec(actionList, "Infrastructure.Virtual.Action.Destroy"); found {
+	if spec, found := getActionSpec(actionList, actionBindingId); found {
 		template := new(ActionTemplate)
 		specErr := c.get(fmt.Sprintf("%s/%s/requests/template", path, spec.ID), template, noCheck)
 		if specErr != nil {
