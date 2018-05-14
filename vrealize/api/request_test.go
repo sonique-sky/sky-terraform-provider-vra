@@ -44,7 +44,7 @@ func TestAPIClient_GetRequestStatus(t *testing.T) {
 	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtRequest, requestId),
 		httpmock.NewStringResponder(200, testData("request_list")))
 
-	template, err := client.GetRequestStatus(requestId)
+	template, err := client.GetRequest(requestId)
 
 	assert.Nil(t, err)
 	assert.Equal(t, "PENDING_PRE_APPROVAL", template.Phase)

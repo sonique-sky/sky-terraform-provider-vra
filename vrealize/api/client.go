@@ -18,7 +18,7 @@ const (
 
 
 type Client interface {
-	GetRequestStatus(requestId string) (*RequestStatusView, error)
+	GetRequest(requestId string) (*Request, error)
 	GetResource(requestId string, resourceType string) (*ResourceWrapper, error)
 	GetResourceViews(requestId string) (*ResourceViews, error)
 	GetMachine(resourceId string) (*Resource, error)

@@ -2,9 +2,9 @@ package api
 
 import "fmt"
 
-func (c *RestClient) GetRequestStatus(requestId string) (*RequestStatusView, error) {
+func (c *RestClient) GetRequest(requestId string) (*Request, error) {
 	path := fmt.Sprintf(fmtRequest, requestId)
-	requestStatusViewTemplate := new(RequestStatusView)
+	requestStatusViewTemplate := new(Request)
 
 	err := c.get(path, requestStatusViewTemplate, noCheck)
 

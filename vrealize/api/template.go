@@ -20,9 +20,7 @@ type ResourceViews struct {
 	Links []interface{} `json:"links"`
 }
 
-//RequestStatusView - used to store REST response of
-//request triggered against any resource.
-type RequestStatusView struct {
+type Request struct {
 	RequestCompletion struct {
 		RequestCompletionState string `json:"requestCompletionState"`
 		CompletionDetails      string `json:"CompletionDetails"`

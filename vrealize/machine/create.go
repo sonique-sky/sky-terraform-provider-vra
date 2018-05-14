@@ -131,15 +131,15 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 
 	waitTimeout := d.Get("wait_timeout").(int) * 60
 
-	status := new(api.RequestStatusView)
+	request := new(api.Request)
 	for i := 0; i < waitTimeout/30; i++ {
 		time.Sleep(3e+10)
 
-		status, _ = client.GetRequestStatus(requestMachine.ID)
-		if status.Phase == "FAILED" {
+		request, _ = client.GetRequest(requestMachine.ID)
+		if request.Phase == "FAILED" {
 			return fmt.Errorf("instance got failed while creating - check detail for more information")
 		}
-		if status.Phase == "SUCCESSFUL" {
+		if request.Phase == "SUCCESSFUL" {
 			resourceViews, e := client.GetResource(requestMachine.ID, "Infrastructure.Virtual")
 			if e != nil {
 				return e
@@ -156,13 +156,13 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 		}
 	}
 
-	if status == nil || status.Phase == "IN_PROGRESS" {
+	if request == nil || request.Phase == "IN_PROGRESS" {
 		//If request is in_progress state during the time then
 		//keep resource details in state files and throw an error
 		//so that the child resource won't go for create call.
-		//If execution gets timed-out and status is in progress
+		//If execution gets timed-out and request is in progress
 		//then dependent machine won't be get created in this iteration.
-		//A user needs to ensure that the status should be a success state
+		//A user needs to ensure that the request should be a success state
 		//using terraform refresh command and hit terraform apply again.
 		return fmt.Errorf("resource is still being created")
 	}

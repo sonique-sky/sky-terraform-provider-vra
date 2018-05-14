@@ -29,5 +29,8 @@ func readResource(d *schema.ResourceData, meta interface{}) error {
 		d.Set("ip_address", val)
 	}
 
+	request, reqErr := client.GetRequest(resource.RequestID)
+
+
 	return nil
 }
