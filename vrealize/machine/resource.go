@@ -64,25 +64,21 @@ func setResourceSchema() map[string]*schema.Schema {
 	}
 }
 
-//Function use - to create machine
-//Terraform call - terraform apply
-func changeTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) (map[string]interface{}, bool) {
+func changeTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) bool {
 	var replaced bool
 	//Iterate over the map to get field provided as an argument
-	for i := range templateInterface {
-		//If value type is map then set recursive call which will fiend field in one level down of map interface
-		if reflect.ValueOf(templateInterface[i]).Kind() == reflect.Map {
-			template, _ := templateInterface[i].(map[string]interface{})
-			templateInterface[i], replaced = changeTemplateValue(template, field, value)
-		} else if i == field {
-			//If value type is not map then compare field name with provided field name
-			//If both matches then update field value with provided value
-			templateInterface[i] = value
-			return templateInterface, true
+	for key, val := range templateInterface {
+		//If value type is map then set recursive call which will find field in one level down of map interface
+		if reflect.ValueOf(val).Kind() == reflect.Map {
+			template, _ := val.(map[string]interface{})
+			replaced = changeTemplateValue(template, field, value)
+			templateInterface[key] = template
+		} else if key == field {
+			templateInterface[key] = value
+			return true
 		}
 	}
-	//Return updated map interface type
-	return templateInterface, replaced
+	return replaced
 }
 
 //modeled after changeTemplateValue, for values being added to template vs updating existing ones

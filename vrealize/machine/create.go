@@ -9,6 +9,8 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/api"
+	"sort"
+	"regexp"
 )
 
 func createResource(d *schema.ResourceData, meta interface{}) error {
@@ -46,41 +48,26 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	log.Printf("createResource->key_list %v\n", keyList)
 
 	//Arrange keys in descending order of text length
-	for field1 := range keyList {
-		for field2 := range keyList {
-			if len(keyList[field1]) > len(keyList[field2]) {
-				temp := keyList[field1]
-				keyList[field1], keyList[field2] = keyList[field2], temp
-			}
-		}
-	}
+	sort.Slice(keyList, func(i1, i2 int) bool {
+		return len(keyList[i1]) > len(keyList[i2])
+	})
 
 	//array to keep track of resource values that have been used
 	usedConfigKeys := []string{}
-	var replaced bool
 
 	//Update template field values with user configuration
 	resourceConfiguration, _ := d.Get("resource_configuration").(map[string]interface{})
-	for configKey := range resourceConfiguration {
-		for dataKey := range keyList {
-			//compare resource list (resource_name) with user configuration fields (resource_name+field_name)
-			if strings.Contains(configKey, keyList[dataKey]) {
-				//If user_configuration contains resource_list element
-				// then split user configuration key into resource_name and field_name
-				splitedArray := strings.SplitN(configKey, keyList[dataKey]+".", 2)
-				if len(splitedArray) != 2 {
-					return fmt.Errorf("resource_configuration key is not in correct format. Expected %s to start with %s\n", configKey, keyList[dataKey]+".")
-				}
-				//Function call which changes the template field values with  user values
-				requestTemplate.Data[keyList[dataKey]], replaced = changeTemplateValue(
-					requestTemplate.Data[keyList[dataKey]].(map[string]interface{}),
-					splitedArray[1],
-					resourceConfiguration[configKey])
-				if replaced {
+	for configKey, configValue := range resourceConfiguration {
+		for _, dataKey := range keyList {
+			templateData := requestTemplate.Data[dataKey].(map[string]interface{})
+			if field, found := checkKey(dataKey, configKey); found {
+				if changeTemplateValue(templateData, field, configValue) {
 					usedConfigKeys = append(usedConfigKeys, configKey)
 				} else {
 					log.Printf("%s was not replaced", configKey)
 				}
+			} else {
+				return fmt.Errorf("resource_configuration key is not in correct format. Expected %s to start with %s\n", configKey, dataKey+".")
 			}
 		}
 	}
@@ -91,17 +78,17 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 		delete(resourceConfiguration, usedConfigKeys[usedKey])
 	}
 	log.Println("Entering Add Loop")
-	for configKey2 := range resourceConfiguration {
-		for dataKey := range keyList {
-			log.Printf("Add Loop: configKey2=[%s] keyList[%d] =[%v]", configKey2, dataKey, keyList[dataKey])
-			if strings.Contains(configKey2, keyList[dataKey]) {
-				splitArray := strings.Split(configKey2, keyList[dataKey]+".")
-				log.Printf("Add Loop Contains %+v", splitArray[1])
-				resourceItem := requestTemplate.Data[keyList[dataKey]].(map[string]interface{})
+	for configKey, configVal := range resourceConfiguration {
+		for _, dataKey := range keyList {
+			log.Printf("Add Loop: configKey2=[%s] keyList[%d] =[%v]", configKey, dataKey, dataKey)
+			if strings.Contains(configKey, dataKey) {
+				splitArray := strings.Split(configKey, dataKey+".")
+				log.Printf("Add Loop Contains %+v", dataKey)
+				resourceItem := requestTemplate.Data[dataKey].(map[string]interface{})
 				resourceItem = addTemplateValue(
 					resourceItem["data"].(map[string]interface{}),
 					splitArray[1],
-					resourceConfiguration[configKey2])
+					configVal)
 			}
 		}
 	}
@@ -167,4 +154,13 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	return nil
+}
+
+func checkKey(dataKey, configKey string) (string, bool) {
+	pattern, _ := regexp.Compile("^" + dataKey + "\\.(.*)")
+	res := pattern.FindStringSubmatch(configKey)
+	if len(res) == 0 {
+		return "", false
+	}
+	return res[1], true
 }
