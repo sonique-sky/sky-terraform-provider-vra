@@ -19,8 +19,7 @@ const (
 
 type Client interface {
 	GetRequest(requestId string) (*Request, error)
-	GetResource(requestId string, resourceType string) (*ResourceWrapper, error)
-	GetResourceViews(requestId string) (*ResourceViews, error)
+	GetRequestResource(requestId string, resourceType string) (*ResourceWrapper, error)
 	GetMachine(resourceId string) (*Resource, error)
 
 	ReadCatalogByID(catalogId string) (*RequestTemplate, error)
@@ -119,6 +118,7 @@ func (c *RestClient) get(requestUrl string, response interface{}, validate func(
 	resp, err := c.HTTPClient.New().Get(requestUrl).Receive(response, apiError)
 
 	if err != nil {
+
 		log.Printf("Http Error : %v", err)
 		return err
 	}

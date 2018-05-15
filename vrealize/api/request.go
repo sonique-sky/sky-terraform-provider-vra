@@ -11,21 +11,7 @@ func (c *RestClient) GetRequest(requestId string) (*Request, error) {
 	return requestStatusViewTemplate, err
 }
 
-func (c *RestClient) GetResourceViews(requestId string) (*ResourceViews, error) {
-	path := fmt.Sprintf(fmtRequestResourceViews, requestId)
-	resourceViews := new(ResourceViews)
-
-	err := c.get(path, resourceViews, noCheck)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return resourceViews, nil
-}
-
-func (c *RestClient) GetResource(requestId string, resourceType string) (*ResourceWrapper, error) {
-
+func (c *RestClient) GetRequestResource(requestId string, resourceType string) (*ResourceWrapper, error) {
 	path := fmt.Sprintf("/catalog-service/api/consumer/requests/%s/resources?$filter=resourceType/id+eq+'%s'", requestId, resourceType)
 	resourceViewsTemplate := new(ResourceWrapper)
 

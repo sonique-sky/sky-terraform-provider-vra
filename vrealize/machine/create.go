@@ -28,13 +28,11 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	if catalogErr != nil {
 		return fmt.Errorf("catalog Lookup failed %v", catalogErr)
 	}
-
 	log.Printf("createResource->requestTemplate %v\n", requestTemplate)
 
 	catalogConfiguration, _ := d.Get("catalog_configuration").(map[string]interface{})
 	for field1 := range catalogConfiguration {
 		requestTemplate.Data[field1] = catalogConfiguration[field1]
-
 	}
 	log.Printf("createResource->requestTemplate.Data %v\n", requestTemplate.Data)
 
@@ -107,6 +105,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 			}
 		}
 	}
+
 	//update template with deployment level config
 	// limit to description and reasons as other things could get us into trouble
 	deploymentConfiguration, _ := d.Get("deployment_configuration").(map[string]interface{})
@@ -140,7 +139,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 			return fmt.Errorf("instance got failed while creating - check detail for more information")
 		}
 		if request.Phase == "SUCCESSFUL" {
-			resourceViews, e := client.GetResource(requestMachine.ID, "Infrastructure.Virtual")
+			resourceViews, e := client.GetRequestResource(requestMachine.ID, "Infrastructure.Virtual")
 			if e != nil {
 				return e
 			}

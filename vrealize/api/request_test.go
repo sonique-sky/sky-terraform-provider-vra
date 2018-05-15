@@ -6,31 +6,50 @@ import (
 	"fmt"
 	"errors"
 	"github.com/stretchr/testify/assert"
+	"net/url"
 )
 
-func TestAPIClient_GetResourceViews(t *testing.T) {
+func TestRestClient_GetRequestResource(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
+
 	requestId := "937099db-5174-4862-99a3-9c2666bfca28"
+	resourceType := "Infrastructure.Virtual"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtRequestResourceViews, requestId),
-		httpmock.NewStringResponder(200, testData("resource_views")))
+	searchPath := fmt.Sprintf("http://localhost/catalog-service/api/consumer/requests/%s/resources?%%24filter=resourceType%%2Fid+eq+%s", requestId,
+		url.QueryEscape(fmt.Sprintf("'%s'", resourceType)))
 
-	template, err := client.GetResourceViews(requestId)
+	httpmock.RegisterResponder("GET", searchPath,
+		httpmock.NewStringResponder(200, testData("request_resource_search_results")))
+
+
+	resource, err := client.GetRequestResource(requestId, resourceType)
 
 	assert.Nil(t, err)
-	assert.Equal(t, 2, len(template.Content))
+	assert.NotNil(t, resource)
+	assert.Equal(t, 1, len(resource.Resources))
+
+	res := resource.Resources[0]
+
+	if val, found := res.StringValue("foo"); found {
+		assert.Equal(t, "foo", val)
+	}
+
 }
 
-func TestAPIClient_GetResourceViews_Failure(t *testing.T) {
+func TestRestClient_GetRequestResource_Failure(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	requestId := "937099db-5174-4862-99a3-9c2666bfca28"
+	resourceType := "Infrastructure.Virtual"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtRequestResourceViews, requestId),
+	searchPath := fmt.Sprintf("http://localhost/catalog-service/api/consumer/requests/%s/resources?%%24filter=resourceType%%2Fid+eq+%s", requestId,
+		url.QueryEscape(fmt.Sprintf("'%s'", resourceType)))
+
+	httpmock.RegisterResponder("GET", searchPath,
 		httpmock.NewErrorResponder(errors.New(testData("api_error"))))
 
-	template, err := client.GetResourceViews(requestId)
+	template, err := client.GetRequestResource(requestId, "Infrastructure.Virtual")
 
 	assert.NotNil(t, err)
 	assert.Nil(t, template)

@@ -41,7 +41,7 @@ func TestAPIClient_GetCatalogItem_Fail(t *testing.T) {
 	assert.Nil(t, template, "No template should be returned")
 }
 
-func TestAPIClient_ReadCatalogByName(t *testing.T) {
+func TestRestClient_ReadCatalogByName(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 

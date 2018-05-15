@@ -31,6 +31,10 @@ func readResource(d *schema.ResourceData, meta interface{}) error {
 
 	request, reqErr := client.GetRequest(resource.RequestID)
 
+	if reqErr != nil {
+		return reqErr
+	}
 
+	d.Set("foo", request.Phase)
 	return nil
 }
