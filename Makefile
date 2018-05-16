@@ -35,10 +35,12 @@ push-image:
 .PHONY: clean
 clean: ; $(info $(M) cleaning…)
 	@docker images -q ${APP} | xargs docker rmi -f
-	@rm -rf bin/*
 
 vendor:
 	command -v $(VENDOR) >/dev/null 2>&1 || go get -u github.com/kardianos/govendor
 	$(VENDOR) init
 	$(VENDOR) add +external
 	@touch $@
+
+install:
+	cp bin/${APP} ~/.terraform.d/plugins/terraform-provider-vra7
