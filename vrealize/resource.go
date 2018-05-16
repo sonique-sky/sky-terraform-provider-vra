@@ -90,13 +90,6 @@ func readResource(d *schema.ResourceData, meta interface{}) error {
 		d.Set("ip_address", val)
 	}
 
-	request, reqErr := client.GetRequest(resource.RequestID)
-
-	if reqErr != nil {
-		return reqErr
-	}
-
-	d.Set("foo", request.Phase)
 	return nil
 }
 

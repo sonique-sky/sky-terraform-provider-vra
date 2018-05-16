@@ -13,12 +13,12 @@ import (
 type Client interface {
 	GetRequest(requestId string) (*Request, error)
 	GetRequestResource(requestId string, resourceType string) (*ResourceWrapper, error)
-	GetMachine(resourceId string) (*Resource, error)
+	RequestMachine(template *RequestTemplate) (*RequestMachineResponse, error)
 
 	ReadCatalogByID(catalogId string) (*RequestTemplate, error)
 	ReadCatalogByName(catalogName string) (*RequestTemplate, error)
 
-	RequestMachine(template *RequestTemplate) (*RequestMachineResponse, error)
+	GetMachine(resourceId string) (*Resource, error)
 	DestroyMachine(resourceId string) (error)
 }
 

@@ -5,7 +5,6 @@ import (
 	"log"
 	"reflect"
 	"regexp"
-	"strings"
 	"sort"
 	"time"
 
@@ -23,7 +22,7 @@ func Create(client api.Client, terraformRequest *TerraformRequest) (*api.Resourc
 	}
 
 	if catalogErr != nil {
-		return nil, fmt.Errorf("catalog Lookup failed %v", catalogErr)
+		return nil, fmt.Errorf("catalog lookup failed: %v", catalogErr)
 	}
 	log.Printf("createResource->requestTemplate %v\n", requestTemplate)
 
@@ -47,42 +46,31 @@ func Create(client api.Client, terraformRequest *TerraformRequest) (*api.Resourc
 		return len(keyList[i1]) > len(keyList[i2])
 	})
 
-	//array to keep track of resource values that have been used
-	usedConfigKeys := []string{}
-
 	//Update template field values with user configuration
 	resourceConfiguration := terraformRequest.ResourceConfiguration
-	for configKey, configValue := range resourceConfiguration {
+	for configKey, configValue := range terraformRequest.ResourceConfiguration {
 		for _, dataKey := range keyList {
 			templateData := requestTemplate.Data[dataKey].(map[string]interface{})
 			if field, found := checkKey(dataKey, configKey); found {
 				if changeTemplateValue(templateData, field, configValue) {
-					usedConfigKeys = append(usedConfigKeys, configKey)
+					delete(terraformRequest.ResourceConfiguration, configKey)
 				} else {
 					log.Printf("%s was not replaced", configKey)
 				}
-			} else {
-				return nil, fmt.Errorf("resource_configuration key is not in correct format. Expected %s to start with %s\n", configKey, dataKey+".")
 			}
 		}
 	}
 
-	//Add remaining keys to template vs updating values
-	// first clean out used values
-	for usedKey := range usedConfigKeys {
-		delete(resourceConfiguration, usedConfigKeys[usedKey])
-	}
 	log.Println("Entering Add Loop")
 	for configKey, configVal := range resourceConfiguration {
 		for _, dataKey := range keyList {
-			log.Printf("Add Loop: configKey2=[%s] keyList[%d] =[%v]", configKey, dataKey, dataKey)
-			if strings.Contains(configKey, dataKey) {
-				splitArray := strings.Split(configKey, dataKey+".")
-				log.Printf("Add Loop Contains %+v", dataKey)
+			log.Printf("Add Loop: configKey=[%s] dataKey=[%s]", configKey, dataKey)
+			if field, found := checkKey(dataKey, configKey); found {
+				log.Printf("Add Loop Contains %s for %s", dataKey, configKey)
 				resourceItem := requestTemplate.Data[dataKey].(map[string]interface{})
 				resourceItem = addTemplateValue(
 					resourceItem["data"].(map[string]interface{}),
-					splitArray[1],
+					field,
 					configVal)
 			}
 		}
@@ -90,16 +78,15 @@ func Create(client api.Client, terraformRequest *TerraformRequest) (*api.Resourc
 
 	//update template with deployment level config
 	// limit to description and reasons as other things could get us into trouble
-	deploymentConfiguration := terraformRequest.DeploymentConfiguration
-	for depField := range deploymentConfiguration {
+	for depField, depValue := range terraformRequest.DeploymentConfiguration {
 		fieldstr := fmt.Sprintf("%s", depField)
 		switch fieldstr {
 		case "description":
-			requestTemplate.Description = deploymentConfiguration[depField].(string)
+			requestTemplate.Description = depValue.(string)
 		case "reasons":
-			requestTemplate.Reasons = deploymentConfiguration[depField].(string)
+			requestTemplate.Reasons = depValue.(string)
 		default:
-			log.Printf("unknown option [%s] with value [%s] ignoring\n", depField, deploymentConfiguration[depField])
+			log.Printf("unknown option [%s] with value [%s] ignoring\n", depField, depValue)
 		}
 	}
 	log.Printf("Updated template - %v\n", requestTemplate.Data)
@@ -162,7 +149,7 @@ func changeTemplateValue(templateInterface map[string]interface{}, field string,
 	for key, val := range templateInterface {
 		//If value type is map then set recursive call which will find field in one level down of map interface
 		if reflect.ValueOf(val).Kind() == reflect.Map {
-			template, _ := val.(map[string]interface{})
+			template := val.(map[string]interface{})
 			replaced = changeTemplateValue(template, field, value)
 			templateInterface[key] = template
 		} else if key == field {
@@ -173,39 +160,17 @@ func changeTemplateValue(templateInterface map[string]interface{}, field string,
 	return replaced
 }
 
-//Function use - to create machine
-//Terraform call - terraform apply
-func oldChangeTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) (map[string]interface{}, bool) {
-	var replaced bool
-	//Iterate over the map to get field provided as an argument
-	for i := range templateInterface {
-		//If value type is map then set recursive call which will fiend field in one level down of map interface
-		if reflect.ValueOf(templateInterface[i]).Kind() == reflect.Map {
-			template, _ := templateInterface[i].(map[string]interface{})
-			templateInterface[i], replaced = oldChangeTemplateValue(template, field, value)
-		} else if i == field {
-			//If value type is not map then compare field name with provided field name
-			//If both matches then update field value with provided value
-			templateInterface[i] = value
-			return templateInterface, true
-		}
-	}
-	//Return updated map interface type
-	return templateInterface, replaced
-}
-
-//modeled after changeTemplateValue, for values being added to template vs updating existing ones
 func addTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) map[string]interface{} {
 	//simplest case is adding a simple value. Leaving as a func in case there's a need to do more complicated additions later
 	//	templateInterface[data]
-	for i := range templateInterface {
-		if reflect.ValueOf(templateInterface[i]).Kind() == reflect.Map && i == "data" {
-			template, _ := templateInterface[i].(map[string]interface{})
-			templateInterface[i] = addTemplateValue(template, field, value)
-		} else { //if i == "data" {
+	for key,val := range templateInterface {
+		// Recurse into any sub-structures named 'data'
+		if reflect.ValueOf(val).Kind() == reflect.Map && key == "data" {
+			template := val.(map[string]interface{})
+			val = addTemplateValue(template, field, value)
+		} else {
 			templateInterface[field] = value
 		}
 	}
-	//Return updated map interface type
 	return templateInterface
 }

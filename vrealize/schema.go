@@ -47,6 +47,15 @@ func resourceSchema() map[string]*schema.Schema {
 				Elem:     schema.TypeString,
 			},
 		},
+		"catalog_configuration": {
+			Type:     schema.TypeMap,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem:     schema.TypeString,
+			},
+		},
 	}
 }
 

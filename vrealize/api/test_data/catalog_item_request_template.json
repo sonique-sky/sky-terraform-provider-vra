@@ -51,6 +51,9 @@
         "_cluster": 1,
         "_hasChildren": false,
         "cpu": 1,
+        "data": {
+          "key": "value"
+        },
         "datacenter_location": null,
         "description": "Basic IaaS CentOS Machine",
         "disks": [
@@ -77,6 +80,9 @@
         "max_per_user": 0,
         "max_volumes": 60,
         "memory": 512,
+        "mo_data": {
+          "foo": "baz"
+        },
         "nics": null,
         "os_arch": "x86_64",
         "os_distribution": null,
