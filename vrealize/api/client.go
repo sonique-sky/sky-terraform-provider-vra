@@ -10,13 +10,6 @@ import (
 	"log"
 )
 
-const (
-	fmtRequestBase          = "/catalog-service/api/consumer/requests"
-	fmtRequest              = fmtRequestBase + "/%s"
-	fmtRequestResourceViews = fmtRequestBase + "/%s/resourceViews"
-)
-
-
 type Client interface {
 	GetRequest(requestId string) (*Request, error)
 	GetRequestResource(requestId string, resourceType string) (*ResourceWrapper, error)

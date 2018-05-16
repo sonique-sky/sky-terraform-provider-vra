@@ -3,7 +3,7 @@ package api
 import "fmt"
 
 func (c *RestClient) GetRequest(requestId string) (*Request, error) {
-	path := fmt.Sprintf(fmtRequest, requestId)
+	path := fmt.Sprintf("/catalog-service/api/consumer/requests/%s", requestId)
 	requestStatusViewTemplate := new(Request)
 
 	err := c.get(path, requestStatusViewTemplate, noCheck)

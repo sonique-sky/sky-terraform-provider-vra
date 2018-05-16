@@ -1,38 +1,33 @@
-package machine
+package vrealize
 
 import (
 	"fmt"
 	"log"
 	"reflect"
+	"regexp"
 	"strings"
+	"sort"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/api"
-	"sort"
-	"regexp"
 )
 
-func createResource(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(api.Client)
-
+func Create(client api.Client, terraformRequest *TerraformRequest) (*api.Resource, error) {
 	var requestTemplate = new(api.RequestTemplate)
 	var catalogErr = *new(error)
 
-	if catalogId, idGiven := d.GetOk("catalog_id"); idGiven {
-		requestTemplate, catalogErr = client.ReadCatalogByID(catalogId.(string))
-	} else if catalogName, nameGiven := d.GetOk("catalog_name"); nameGiven {
-		requestTemplate, catalogErr = client.ReadCatalogByName(catalogName.(string))
+	if len(terraformRequest.CatalogId) > 0 {
+		requestTemplate, catalogErr = client.ReadCatalogByID(terraformRequest.CatalogId)
 	} else {
-		return fmt.Errorf("cannot retrieve catalog without 'catalog_id' or 'catalog_name'")
+		requestTemplate, catalogErr = client.ReadCatalogByName(terraformRequest.CatalogName)
 	}
 
 	if catalogErr != nil {
-		return fmt.Errorf("catalog Lookup failed %v", catalogErr)
+		return nil, fmt.Errorf("catalog Lookup failed %v", catalogErr)
 	}
 	log.Printf("createResource->requestTemplate %v\n", requestTemplate)
 
-	catalogConfiguration, _ := d.Get("catalog_configuration").(map[string]interface{})
+	catalogConfiguration := terraformRequest.CatalogConfiguration
 	for field1 := range catalogConfiguration {
 		requestTemplate.Data[field1] = catalogConfiguration[field1]
 	}
@@ -56,7 +51,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	usedConfigKeys := []string{}
 
 	//Update template field values with user configuration
-	resourceConfiguration, _ := d.Get("resource_configuration").(map[string]interface{})
+	resourceConfiguration := terraformRequest.ResourceConfiguration
 	for configKey, configValue := range resourceConfiguration {
 		for _, dataKey := range keyList {
 			templateData := requestTemplate.Data[dataKey].(map[string]interface{})
@@ -67,7 +62,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 					log.Printf("%s was not replaced", configKey)
 				}
 			} else {
-				return fmt.Errorf("resource_configuration key is not in correct format. Expected %s to start with %s\n", configKey, dataKey+".")
+				return nil, fmt.Errorf("resource_configuration key is not in correct format. Expected %s to start with %s\n", configKey, dataKey+".")
 			}
 		}
 	}
@@ -95,7 +90,7 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 
 	//update template with deployment level config
 	// limit to description and reasons as other things could get us into trouble
-	deploymentConfiguration, _ := d.Get("deployment_configuration").(map[string]interface{})
+	deploymentConfiguration := terraformRequest.DeploymentConfiguration
 	for depField := range deploymentConfiguration {
 		fieldstr := fmt.Sprintf("%s", depField)
 		switch fieldstr {
@@ -112,10 +107,10 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 	requestMachine, err := client.RequestMachine(requestTemplate)
 
 	if err != nil {
-		return fmt.Errorf("resource machine request failed: %v", err)
+		return nil, fmt.Errorf("resource machine request failed: %v", err)
 	}
 
-	waitTimeout := d.Get("wait_timeout").(int) * 60
+	waitTimeout := terraformRequest.WaitTimeOut * 60
 
 	request := new(api.Request)
 	for i := 0; i < waitTimeout/30; i++ {
@@ -123,22 +118,20 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 
 		request, _ = client.GetRequest(requestMachine.ID)
 		if request.Phase == "FAILED" {
-			return fmt.Errorf("instance got failed while creating - check detail for more information")
+			return nil, fmt.Errorf("instance got failed while creating - check detail for more information")
 		}
 		if request.Phase == "SUCCESSFUL" {
 			resourceViews, e := client.GetRequestResource(requestMachine.ID, "Infrastructure.Virtual")
 			if e != nil {
-				return e
+				return nil, e
 			}
 
 			if len(resourceViews.Resources) == 0 {
-				return fmt.Errorf("could not find expected resource")
+				return nil, fmt.Errorf("could not find expected resource")
 			}
 
 			resource := resourceViews.Resources[0]
-			d.SetId(resource.ID)
-			readResource(d, meta)
-			return nil
+			return &resource, nil
 		}
 	}
 
@@ -150,10 +143,9 @@ func createResource(d *schema.ResourceData, meta interface{}) error {
 		//then dependent machine won't be get created in this iteration.
 		//A user needs to ensure that the request should be a success state
 		//using terraform refresh command and hit terraform apply again.
-		return fmt.Errorf("resource is still being created")
+		return nil, fmt.Errorf("resource is still being created")
 	}
-
-	return nil
+	return nil, nil
 }
 
 func checkKey(dataKey, configKey string) (string, bool) {
@@ -163,4 +155,57 @@ func checkKey(dataKey, configKey string) (string, bool) {
 		return "", false
 	}
 	return res[1], true
+}
+
+func changeTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) bool {
+	var replaced bool
+	for key, val := range templateInterface {
+		//If value type is map then set recursive call which will find field in one level down of map interface
+		if reflect.ValueOf(val).Kind() == reflect.Map {
+			template, _ := val.(map[string]interface{})
+			replaced = changeTemplateValue(template, field, value)
+			templateInterface[key] = template
+		} else if key == field {
+			templateInterface[key] = value
+			return true
+		}
+	}
+	return replaced
+}
+
+//Function use - to create machine
+//Terraform call - terraform apply
+func oldChangeTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) (map[string]interface{}, bool) {
+	var replaced bool
+	//Iterate over the map to get field provided as an argument
+	for i := range templateInterface {
+		//If value type is map then set recursive call which will fiend field in one level down of map interface
+		if reflect.ValueOf(templateInterface[i]).Kind() == reflect.Map {
+			template, _ := templateInterface[i].(map[string]interface{})
+			templateInterface[i], replaced = oldChangeTemplateValue(template, field, value)
+		} else if i == field {
+			//If value type is not map then compare field name with provided field name
+			//If both matches then update field value with provided value
+			templateInterface[i] = value
+			return templateInterface, true
+		}
+	}
+	//Return updated map interface type
+	return templateInterface, replaced
+}
+
+//modeled after changeTemplateValue, for values being added to template vs updating existing ones
+func addTemplateValue(templateInterface map[string]interface{}, field string, value interface{}) map[string]interface{} {
+	//simplest case is adding a simple value. Leaving as a func in case there's a need to do more complicated additions later
+	//	templateInterface[data]
+	for i := range templateInterface {
+		if reflect.ValueOf(templateInterface[i]).Kind() == reflect.Map && i == "data" {
+			template, _ := templateInterface[i].(map[string]interface{})
+			templateInterface[i] = addTemplateValue(template, field, value)
+		} else { //if i == "data" {
+			templateInterface[field] = value
+		}
+	}
+	//Return updated map interface type
+	return templateInterface
 }

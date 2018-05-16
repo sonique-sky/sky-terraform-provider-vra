@@ -1,10 +1,13 @@
-package machine
+package vrealize
 
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"fmt"
 	"sort"
+	"io/ioutil"
+	"encoding/json"
+	"github.com/sonique-sky/sky-terraform-provider-vra/vrealize/api"
 )
 
 func Test_addTemplateValue(t *testing.T) {
@@ -55,15 +58,14 @@ func Test_keylistSorting(t *testing.T) {
 }
 
 func Test_foof(t *testing.T) {
-	inty := make(map[string]interface{})
-	inty["foo"] = "baz"
+	template := new(api.RequestTemplate)
+	bytes, _ := ioutil.ReadFile("../api/test_data/catalog_item_request_template.json")
+	json.Unmarshal(bytes, template)
 
-	changeValue(inty, "foo", "bbbar")
+	templateData := template.Data["CentOS_6.3"].(map[string]interface{})
 
-	fmt.Println(inty["foo"])
+	changeTemplateValue(templateData, "foo", "bbbar")
 
+	fmt.Println(template)
 }
-func changeValue(templateInterface map[string]interface{}, field string, value interface{}) (map[string]interface{}, bool) {
-	templateInterface[field] = value
-	return templateInterface, true
-}
+

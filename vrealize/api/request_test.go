@@ -60,7 +60,8 @@ func TestAPIClient_GetRequestStatus(t *testing.T) {
 	defer httpmock.DeactivateAndReset()
 	requestId := "937099db-5174-4862-99a3-9c2666bfca28"
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("http://localhost"+fmtRequest, requestId),
+	path := fmt.Sprintf("http://localhost/catalog-service/api/consumer/requests/%s", requestId)
+	httpmock.RegisterResponder("GET", path,
 		httpmock.NewStringResponder(200, testData("request_list")))
 
 	template, err := client.GetRequest(requestId)
